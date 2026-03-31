@@ -15,7 +15,7 @@ st.markdown("""
     .nutrient-low { background-color: #fff5f5; border-left: 5px solid #ff7675; }
     .nutrient-high { background-color: #fff0db; border-left: 5px solid #fdcb6e; }
     .step-indicator { font-size: 1.2rem; font-weight: bold; color: #555; text-align: center; padding: 10px; background-color: #eef; border-radius: 8px; margin-bottom: 20px; }
-    .nutrient-card { background-color: #ffffff; padding: 15px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; height: 100%; }
+    .nutrient-card { background-color: #ffffff; padding: 15px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; height: 100%; border-top: 4px solid #FF4B4B;}
 </style>
 """, unsafe_allow_html=True)
 
@@ -82,7 +82,7 @@ nutrient_info = {
     "fat": "Hücre zarı ve hormon üretimi için gereklidir.",
     "carbs": "Vücudun temel enerji kaynağıdır.",
     "vit_a_iu": "Göz sağlığı ve bağışıklık sistemi için kritiktir.",
-    "vit_c_mg": "Antioksidandır, bağışıklığı güçlendirir, demir emilimini artırır.",
+    "vit_c_mg": "Antioksidandır, bağışıklığı güçlendirir.",
     "vit_d_iu": "Kemik sağlığı ve ruh hali için güneş vitaminidir.",
     "vit_e_mg": "Cilt sağlığı ve hücre yenilenmesi için önemlidir.",
     "calcium_mg": "Kemik ve diş yapısını korur, kas kasılmasını sağlar.",
@@ -196,7 +196,6 @@ elif st.session_state.step == 2:
                 ratio = grams / 100
                 item_full = row.to_dict()
                 for k in item_full.keys():
-                    # Metin olan sütunları çarpmamak için filtreliyoruz
                     if pd.api.types.is_numeric_dtype(type(item_full[k])):
                         item_full[k] = item_full[k] * ratio
                 temp_basket.append(item_full)
@@ -245,7 +244,7 @@ elif st.session_state.step == 3:
     totals = {k: sum(x.get(k, 0) for x in basket) for k in targets.keys()}
 
     # --- SEKMELİ RAPORLAMA ---
-    tab1, tab2, tab3 = st.tabs(["📊 Özet Durum", "📋 Detaylı Karne", "💡 Akıllı Dengeli Öneri"])
+    tab1, tab2, tab3 = st.tabs(["📊 Özet Durum", "📋 Detaylı Karne", "💡 Akıllı Kombinasyon Önerisi"])
 
     # --- TAB 1: ÖZET ---
     with tab1:
@@ -288,70 +287,63 @@ elif st.session_state.step == 3:
             analyze_nutrient("Magnezyum", totals["magnesium_mg"], targets["magnesium_mg"], "mg", "magnesium_mg")
             analyze_nutrient("Çinko", totals["zinc_mg"], targets["zinc_mg"], "mg", "zinc_mg")
 
-    # --- TAB 3: AKILLI DENGELİ ÖNERİ ---
+    # --- TAB 3: YENİ AKILLI ÇOKLU EKSİKLİK ÖNERİSİ ---
     with tab3:
         st.subheader(f"🔮 Gelecek Öğün Planı: {meal_data['next_meal_name']}")
         
-        # En büyük eksiği bul (Sadece Vitamin/Mineraller arasından)
+        # 1. Eksikleri bul
         deficiencies = {}
         for k, v in targets.items():
-            if k in ["calories", "protein", "carbs", "fat"]: continue # Makroları öneride atla
-            if totals[k] < (v * 0.6): # Eğer hedefin %60'ından az alındıysa eksik say
+            if k in ["calories", "protein", "carbs", "fat"]: continue # Makroları geç
+            if totals[k] < (v * 0.6): # Hedefin %60'ından azsa eksik say
                 deficiencies[k] = (v - totals[k]) / v
         
         if deficiencies:
-            worst = max(deficiencies, key=deficiencies.get)
-            clean_name = worst.replace("_mg", "").replace("_iu", "").upper()
+            # 2. Eksikleri büyükten küçüğe sırala ve en büyük 3 tanesini al
+            sorted_deficiencies = sorted(deficiencies.items(), key=lambda x: x[1], reverse=True)
+            top_3_deficiencies = sorted_deficiencies[:3] 
             
-            # --- YENİ DENGELİ MENÜ ALGORİTMASI ---
-            # Eğer CSV dosyasında 'Ogun' ve 'Tur' sütunları varsa bu çalışır.
-            if 'Ogun' in df.columns and 'Tur' in df.columns:
-                next_meal_name = meal_data['next_meal_name']
-                
-                # Sadece ilgili öğüne uygun yemekleri filtrele
-                next_foods = df[df['Ogun'].str.contains(next_meal_name, na=False, case=False)]
-                
-                if next_meal_name == "Yarınki Kahvaltı":
-                    # Kahvaltı Kombinasyonu: Ana Kahvaltılık + Yan Ürün + İçecek
-                    grup1 = next_foods[next_foods['Tur'].str.contains('Ana', na=False, case=False)].sort_values(by=worst, ascending=False).head(1)
-                    grup2 = next_foods[next_foods['Tur'].str.contains('Ara|Yan|Söğüş|Peynir|Zeytin', na=False, case=False)].sort_values(by=worst, ascending=False).head(1)
-                    grup3 = next_foods[next_foods['Tur'].str.contains('İçecek', na=False, case=False)].sort_values(by=worst, ascending=False).head(1)
-                else:
-                    # Öğle/Akşam Kombinasyonu: Çorba/Ara Sıcak + Ana Yemek + Salata/İçecek/Tatlı
-                    grup1 = next_foods[next_foods['Tur'].str.contains('Çorba|Ara', na=False, case=False)].sort_values(by=worst, ascending=False).head(1)
-                    grup2 = next_foods[next_foods['Tur'].str.contains('Ana', na=False, case=False)].sort_values(by=worst, ascending=False).head(1)
-                    grup3 = next_foods[next_foods['Tur'].str.contains('İçecek|Salata|Tatlı|Meze', na=False, case=False)].sort_values(by=worst, ascending=False).head(1)
-                
-                # Grupları birleştir ve boş olanları çıkar
-                suggestions = pd.concat([grup1, grup2, grup3]).dropna(how='all')
-                
-                # Eğer filtreleme sonucu yeterli yemek bulunamazsa eski sisteme düş (Güvenlik)
-                if suggestions.empty:
-                    suggestions = df[df['category'].isin(meal_data['next_cats'])].sort_values(by=worst, ascending=False).head(3)
-            
-            # Eski Sistem (CSV güncellenmediyse burası çalışır)
-            else:
-                next_foods = df[df['category'].isin(meal_data['next_cats'])]
-                suggestions = next_foods.sort_values(by=worst, ascending=False).head(3)
-                
-            st.error(f"Bu öğünde **{clean_name}** alımın yetersiz kaldı.")
-            st.info(f"💡 {meal_data['next_meal_name']} için {clean_name} açığını kapatacak Dengeli Menü Önerisi:")
+            st.error("Bu süreçte bazı mineral ve vitamin alımların yetersiz kaldı.")
+            st.info(f"💡 {meal_data['next_meal_name']} öğününde bu eksiklikleri topluca kapatacak Kombinasyon Önerisi:")
             
             sc1, sc2, sc3 = st.columns(3)
-            for idx, (_, row) in enumerate(suggestions.iterrows()):
-                if idx < 3: # Maksimum 3 kart göster
-                    with [sc1, sc2, sc3][idx]:
-                        # CSV'de 'Tur' yoksa 'category' kullan
-                        tur_baslik = row['Tur'] if 'Tur' in row.index and pd.notna(row['Tur']) else row['category']
+            used_foods = [] # Aynı yemeği tekrar önermemek için liste
+            
+            # Her bir eksiklik için ayrı bir sütun oluştur ve yemek seç
+            for idx, (nutrient_key, deficiency_ratio) in enumerate(top_3_deficiencies):
+                clean_name = nutrient_key.replace("_mg", "").replace("_iu", "").upper()
+                
+                with [sc1, sc2, sc3][idx]:
+                    # Eğer 'Ogun' sütunu varsa o öğüne uygun olanları filtrele, yoksa hepsinden seç
+                    if 'Ogun' in df.columns:
+                        next_foods = df[df['Ogun'].str.contains(meal_data['next_meal_name'], na=False, case=False)]
+                    else:
+                        next_foods = df[df['category'].isin(meal_data['next_cats'])]
+                    
+                    # Daha önce önerilenleri listeden çıkar (Meyve, meyve, meyve önermesin diye)
+                    available_foods = next_foods[~next_foods['name'].isin(used_foods)]
+                    
+                    if not available_foods.empty:
+                        # O spesifik eksiği en iyi kapatan yemeği bul
+                        best_food = available_foods.sort_values(by=nutrient_key, ascending=False).iloc[0]
+                        used_foods.append(best_food['name']) # Listeye ekle
+                        
+                        # Türü belirle
+                        tur_baslik = best_food['Tur'] if 'Tur' in best_food.index and pd.notna(best_food['Tur']) else best_food['category']
                         
                         st.markdown(f"""
-                        <div class="nutrient-card" style="border-top: 4px solid #FF4B4B;">
+                        <div class="nutrient-card">
                             <p style="color:#888; font-size:12px; margin-bottom:0; text-transform:uppercase;">{tur_baslik}</p>
-                            <h3 style="margin-top:5px; margin-bottom:15px; font-size:18px;">{row['name']}</h3>
-                            <h2 style="color:#FF4B4B; margin:0;">{row[worst]:.1f}</h2>
-                            <p style="font-size:12px; color:#555; margin-top:0;">{clean_name}</p>
+                            <h3 style="margin-top:5px; margin-bottom:15px; font-size:18px;">{best_food['name']}</h3>
+                            <div style="background-color:#fff0f0; padding:10px; border-radius:8px;">
+                                <p style="font-size:12px; color:#555; margin-bottom:0;">Bunu tamamlar:</p>
+                                <h2 style="color:#FF4B4B; margin:0;">{clean_name}</h2>
+                                <p style="font-size:14px; color:#333; margin-top:5px;"><b>+{best_food[nutrient_key]:.1f}</b> eklenecek</p>
+                            </div>
                         </div>
                         """, unsafe_allow_html=True)
+                    else:
+                        st.warning(f"{clean_name} için uygun yemek bulunamadı.")
         else:
             st.balloons()
             st.success("Tebrikler! Besin değerlerin harika. Gelecek öğünde serbestsin!")
