@@ -120,7 +120,7 @@ with c2:
     st.caption("Detaylı Besin Analiz Raporu ve Akıllı Karar Destek Sistemi")
 
 # ==========================================
-# 🏁 SAYFA 1 VE 2
+# 🏁 SAYFA 1: PROFİL
 # ==========================================
 if st.session_state.step == 1:
     st.markdown('<div class="step-indicator">Adım 1/3: Profilini Oluştur</div>', unsafe_allow_html=True)
@@ -143,21 +143,53 @@ if st.session_state.step == 1:
     st.markdown("---")
     st.button("Kaydet ve İlerle 👉", on_click=save_profile_and_next)
 
+# ==========================================
+# 🥗 SAYFA 2: YEMEK SEÇİMİ (YENİ KATEGORİLİ SİSTEM)
+# ==========================================
 elif st.session_state.step == 2:
     st.markdown('<div class="step-indicator">Adım 2/3: Ne Yiyorsun?</div>', unsafe_allow_html=True)
+    
     col_meal, col_select = st.columns([1, 2])
     with col_meal:
         meal_opts = ["Kahvaltı", "Öğle Yemeği", "Akşam Yemeği"]
         meal_idx = meal_opts.index(st.session_state.meal_state.get("current_meal", meal_opts[0])) if st.session_state.meal_state.get("current_meal") in meal_opts else 0
         st.radio("Zaman Dilimi", meal_opts, index=meal_idx, key="w_meal_type")
+        
     with col_select:
-        st.multiselect("🍽️ Menüden Seç:", df['name'].tolist(), key="w_selected_foods")
+        st.markdown("### 🍽️ Menüden Seç")
+        st.caption("Aradığın yemeği bulmak için ilgili kategoriye tıkla:")
+        
+        all_selected = []
+        
+        # Yemekleri daha şık görünmesi için 4 ana gruba ayırdık
+        groups = {
+            "🍳 Kahvaltı & Süt": ["Kahvaltılık", "Süt Ürünü"],
+            "🍲 Yemekler": ["Çorba", "Et", "Sebze", "Bakliyat"],
+            "🥗 Salata & Yancı": ["Salata", "Tahıl", "Hamur İşi"],
+            "🍎 Tatlı & Atıştırmalık": ["Meyve", "Kuruyemiş", "Tatlı", "İçecek", "FastFood"]
+        }
+        
+        # Sekmeleri (Tabs) oluşturuyoruz
+        category_tabs = st.tabs(list(groups.keys()))
+        
+        for i, (grp_name, cats) in enumerate(groups.items()):
+            with category_tabs[i]:
+                for cat in cats:
+                    # CSV'deki kategorilere göre yemekleri filtrele
+                    cat_foods = df[df['category'] == cat]['name'].tolist()
+                    if cat_foods:
+                        # Her alt kategori için ayrı bir arama kutusu
+                        sel = st.multiselect(f"👉 {cat} Ekle:", cat_foods, key=f"sel_{cat}")
+                        all_selected.extend(sel)
+                        
+        st.session_state.w_selected_foods = all_selected
 
     temp_basket = []
     selected = st.session_state.w_selected_foods
+    
     if selected:
         st.markdown("---")
-        st.info("👇 Gramajları ayarlamayı unutma!")
+        st.info("👇 Seçtiğin yemeklerin gramajlarını ayarlamayı unutma!")
         cols = st.columns(3)
         for i, food_name in enumerate(selected):
             row = df[df['name'] == food_name].iloc[0]
@@ -169,7 +201,9 @@ elif st.session_state.step == 2:
                     if pd.api.types.is_numeric_dtype(type(item_full[k])):
                         item_full[k] = item_full[k] * ratio
                 temp_basket.append(item_full)
+                
     st.session_state.meal_state["basket"] = temp_basket
+    
     st.markdown("---")
     b1, b2 = st.columns([1, 4])
     with b1: st.button("👈 Geri", on_click=go_back)
@@ -245,7 +279,6 @@ elif st.session_state.step == 3:
             analyze_nutrient("Magnezyum", totals["magnesium_mg"], targets["magnesium_mg"], "mg", "magnesium_mg")
             analyze_nutrient("Çinko", totals["zinc_mg"], targets["zinc_mg"], "mg", "zinc_mg")
 
-    # --- TAB 3: KALORİ KONTROLLÜ FİYAT/PERFORMANS MANTIĞI ---
     with tab3:
         st.subheader(f"🔮 Gelecek Öğün Planı: {meal_data['next_meal_name']}")
         
@@ -265,8 +298,6 @@ elif st.session_state.step == 3:
             used_foods = [] 
             search_meal = "Kahvaltı" if meal_data['next_meal_name'] == "Yarınki Kahvaltı" else meal_data['next_meal_name']
             
-            # Kalori Sınırı Belirleme (1 öğün için önerilecek tek bir tabağın max kalorisi)
-            # Hedef kalorinin 1/3'ünü geçmesin. Öğle/Akşam ise porsiyon başına biraz esneklik payı.
             max_cal_per_item = (targets['calories'] / 3) * 1.5 
             
             for idx, (nutrient_key, deficiency_ratio) in enumerate(sorted_deficiencies):
@@ -281,19 +312,11 @@ elif st.session_state.step == 3:
                     available_foods = next_foods[~next_foods['name'].isin(used_foods)]
                     
                     if not available_foods.empty:
-                        # 1. Aşama: Kalorisi devasa olan yiyecekleri (örn: Tereyağı, Kajun) ele
                         calorie_filtered = available_foods[available_foods['calories'] <= max_cal_per_item].copy()
-                        
-                        # Eğer hepsi elendiyse çok katı filtre uygulamayalım, diyeti bozmamak adına hepsini geri al
                         if calorie_filtered.empty:
                             calorie_filtered = available_foods.copy()
 
-                        # 2. Aşama: Fiyat/Performans (Nutrient Density) Hesaplama
-                        # 1 kalori başına ne kadar vitamin verdiğini buluyoruz
-                        # Sıfıra bölünme hatasını engellemek için kalorisi 0 olanları (çay, maden suyu) 1 kabul et
                         calorie_filtered['fiyat_performans'] = calorie_filtered[nutrient_key] / calorie_filtered['calories'].replace(0, 1)
-                        
-                        # Fiyat/Performans oranı en yüksek (yani en az kaloriyle en çok vitamin veren) yemeği seç
                         best_food = calorie_filtered.sort_values(by='fiyat_performans', ascending=False).iloc[0]
                         
                         used_foods.append(best_food['name'])
