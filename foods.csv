@@ -1,73 +1,73 @@
 name,category,calories,protein,fat,carbs,vit_a_iu,vit_b_mg,vit_c_mg,vit_d_iu,vit_e_mg,calcium_mg,iron_mg,magnesium_mg,zinc_mg,Ogun,Tur
-Mercimek Çorbası,Çorba,56,3.0,1.0,9.0,200,0.1,1.5,0,0.2,10,1.5,15,0.5,Öğle Yemeği, Akşam Yemeği,Çorba
-Domates Çorbası,Çorba,35,1.0,1.0,6.0,300,0.05,5.0,0,0.4,8,0.5,10,0.2,Öğle Yemeği, Akşam Yemeği,Çorba
-Tarhana Çorbası,Çorba,60,2.5,1.5,10.0,150,0.2,1.0,0,0.1,20,1.0,12,0.8,Öğle Yemeği, Akşam Yemeği,Çorba
-Yayla Çorbası,Çorba,48,2.0,2.0,5.0,100,0.1,0.5,2,0.1,30,0.2,8,0.4,Öğle Yemeği, Akşam Yemeği,Çorba
-Ezogelin Çorbası,Çorba,63,3.0,1.5,9.0,180,0.1,1.0,0,0.2,12,1.2,14,0.6,Öğle Yemeği, Akşam Yemeği,Çorba
-Tavuk Suyu Çorba,Çorba,50,4.0,2.0,3.0,50,0.2,0.5,1,0.1,5,0.5,5,0.8,Öğle Yemeği, Akşam Yemeği,Çorba
-Kelle Paça Çorbası,Çorba,150,13.0,9.0,2.0,50,0.3,1.0,5,0.2,15,2.0,20,3.0,Kahvaltı, Öğle Yemeği, Akşam Yemeği,Çorba
-Mantar Çorbası,Çorba,60,2.0,4.0,5.0,20,0.3,0.5,15,0.1,10,0.8,10,0.5,Öğle Yemeği, Akşam Yemeği,Çorba
-Şehriye Çorbası,Çorba,45,1.5,1.0,8.0,100,0.1,2.0,0,0.1,5,0.5,8,0.2,Öğle Yemeği, Akşam Yemeği,Çorba
-Brokoli Çorbası,Çorba,40,2.0,1.5,5.0,800,0.2,40.0,0,0.5,30,0.8,15,0.4,Öğle Yemeği, Akşam Yemeği,Çorba
-Izgara Köfte,Et,250,18.0,15.0,5.0,50,0.4,0,10,0.5,20,2.5,25,4.0,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Tavuk Sote,Et,160,22.0,6.0,3.0,100,0.5,4.0,5,0.8,15,1.0,25,1.5,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Et Döner,Et,280,20.0,20.0,4.0,20,0.3,0,8,0.3,18,2.8,22,4.5,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Tavuk Döner,Et,220,24.0,12.0,3.0,30,0.4,0,6,0.5,12,1.2,20,1.2,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Karnıyarık,Et,180,6.0,12.0,8.0,150,0.2,5.0,0,1.0,25,0.8,30,0.5,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Adana Kebap,Et,360,18.0,30.0,2.0,100,0.4,2.0,10,0.5,22,3.0,28,5.0,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-İskender Kebap,Et,450,25.0,25.0,35.0,200,0.5,5.0,15,1.0,80,3.5,40,6.0,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Tas Kebabı,Et,170,15.0,10.0,6.0,200,0.4,3.0,5,0.5,15,2.2,20,3.5,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Kadınbudu Köfte,Et,260,12.0,18.0,15.0,80,0.2,0,5,0.4,18,2.0,15,2.5,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Hünkar Beğendi,Et,320,18.0,25.0,8.0,400,0.3,5.0,10,0.8,120,2.5,35,3.0,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Ciğer Sote,Et,180,26.0,6.0,4.0,15000,1.2,20.0,20,0.5,10,12.0,20,6.0,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Tavuk Şiş,Et,140,24.0,4.0,1.0,40,0.5,1.0,4,0.3,12,1.0,28,1.8,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Fırın Tavuk,Et,190,20.0,11.0,2.0,60,0.4,0,6,0.5,15,1.1,22,1.5,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Somon Balığı (Izgara),Et,208,20.0,13.0,0,50,0.8,0,500,1.0,15,0.8,30,0.6,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Ton Balığı (Yağsız),Et,130,28.0,1.0,0,50,0.4,0,200,0.5,10,1.5,35,0.8,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Hamsi (Fırın),Et,150,18.0,8.0,0,100,0.3,0,250,1.2,140,2.0,40,1.5,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Levrek Izgara,Et,100,19.0,3.0,0,100,0.4,0,150,0.8,20,0.5,35,0.6,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Lahmacun,Hamur İşi,200,8.0,8.0,25.0,120,0.2,5.0,0,0.4,15,1.5,18,1.0,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Kıymalı Pide,Hamur İşi,250,10.0,10.0,30.0,100,0.3,2.0,0,0.3,20,1.8,20,1.5,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Kaşarlı Pide,Hamur İşi,300,12.0,15.0,30.0,300,0.2,0,10,0.5,300,0.5,25,2.0,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Mantı,Hamur İşi,220,7.0,8.0,30.0,40,0.1,0,1,0.2,20,1.0,15,0.8,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Su Böreği,Hamur İşi,330,8.0,18.0,35.0,200,0.1,0,5,0.3,80,1.2,10,0.5,Kahvaltı, Öğle Yemeği,Ana Yemek
-Sigara Böreği,Hamur İşi,320,7.0,20.0,28.0,150,0.1,0,2,0.4,100,0.8,12,0.4,Kahvaltı, Öğle Yemeği, Ara Yemek
+Mercimek Çorbası,Çorba,56,3.0,1.0,9.0,200,0.1,1.5,0,0.2,10,1.5,15,0.5,Öğle Yemeği / Akşam Yemeği,Çorba
+Domates Çorbası,Çorba,35,1.0,1.0,6.0,300,0.05,5.0,0,0.4,8,0.5,10,0.2,Öğle Yemeği / Akşam Yemeği,Çorba
+Tarhana Çorbası,Çorba,60,2.5,1.5,10.0,150,0.2,1.0,0,0.1,20,1.0,12,0.8,Öğle Yemeği / Akşam Yemeği,Çorba
+Yayla Çorbası,Çorba,48,2.0,2.0,5.0,100,0.1,0.5,2,0.1,30,0.2,8,0.4,Öğle Yemeği / Akşam Yemeği,Çorba
+Ezogelin Çorbası,Çorba,63,3.0,1.5,9.0,180,0.1,1.0,0,0.2,12,1.2,14,0.6,Öğle Yemeği / Akşam Yemeği,Çorba
+Tavuk Suyu Çorba,Çorba,50,4.0,2.0,3.0,50,0.2,0.5,1,0.1,5,0.5,5,0.8,Öğle Yemeği / Akşam Yemeği,Çorba
+Kelle Paça Çorbası,Çorba,150,13.0,9.0,2.0,50,0.3,1.0,5,0.2,15,2.0,20,3.0,Kahvaltı / Öğle Yemeği / Akşam Yemeği,Çorba
+Mantar Çorbası,Çorba,60,2.0,4.0,5.0,20,0.3,0.5,15,0.1,10,0.8,10,0.5,Öğle Yemeği / Akşam Yemeği,Çorba
+Şehriye Çorbası,Çorba,45,1.5,1.0,8.0,100,0.1,2.0,0,0.1,5,0.5,8,0.2,Öğle Yemeği / Akşam Yemeği,Çorba
+Brokoli Çorbası,Çorba,40,2.0,1.5,5.0,800,0.2,40.0,0,0.5,30,0.8,15,0.4,Öğle Yemeği / Akşam Yemeği,Çorba
+Izgara Köfte,Et,250,18.0,15.0,5.0,50,0.4,0,10,0.5,20,2.5,25,4.0,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Tavuk Sote,Et,160,22.0,6.0,3.0,100,0.5,4.0,5,0.8,15,1.0,25,1.5,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Et Döner,Et,280,20.0,20.0,4.0,20,0.3,0,8,0.3,18,2.8,22,4.5,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Tavuk Döner,Et,220,24.0,12.0,3.0,30,0.4,0,6,0.5,12,1.2,20,1.2,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Karnıyarık,Et,180,6.0,12.0,8.0,150,0.2,5.0,0,1.0,25,0.8,30,0.5,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Adana Kebap,Et,360,18.0,30.0,2.0,100,0.4,2.0,10,0.5,22,3.0,28,5.0,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+İskender Kebap,Et,450,25.0,25.0,35.0,200,0.5,5.0,15,1.0,80,3.5,40,6.0,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Tas Kebabı,Et,170,15.0,10.0,6.0,200,0.4,3.0,5,0.5,15,2.2,20,3.5,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Kadınbudu Köfte,Et,260,12.0,18.0,15.0,80,0.2,0,5,0.4,18,2.0,15,2.5,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Hünkar Beğendi,Et,320,18.0,25.0,8.0,400,0.3,5.0,10,0.8,120,2.5,35,3.0,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Ciğer Sote,Et,180,26.0,6.0,4.0,15000,1.2,20.0,20,0.5,10,12.0,20,6.0,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Tavuk Şiş,Et,140,24.0,4.0,1.0,40,0.5,1.0,4,0.3,12,1.0,28,1.8,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Fırın Tavuk,Et,190,20.0,11.0,2.0,60,0.4,0,6,0.5,15,1.1,22,1.5,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Somon Balığı (Izgara),Et,208,20.0,13.0,0,50,0.8,0,500,1.0,15,0.8,30,0.6,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Ton Balığı (Yağsız),Et,130,28.0,1.0,0,50,0.4,0,200,0.5,10,1.5,35,0.8,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Hamsi (Fırın),Et,150,18.0,8.0,0,100,0.3,0,250,1.2,140,2.0,40,1.5,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Levrek Izgara,Et,100,19.0,3.0,0,100,0.4,0,150,0.8,20,0.5,35,0.6,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Lahmacun,Hamur İşi,200,8.0,8.0,25.0,120,0.2,5.0,0,0.4,15,1.5,18,1.0,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Kıymalı Pide,Hamur İşi,250,10.0,10.0,30.0,100,0.3,2.0,0,0.3,20,1.8,20,1.5,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Kaşarlı Pide,Hamur İşi,300,12.0,15.0,30.0,300,0.2,0,10,0.5,300,0.5,25,2.0,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Mantı,Hamur İşi,220,7.0,8.0,30.0,40,0.1,0,1,0.2,20,1.0,15,0.8,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Su Böreği,Hamur İşi,330,8.0,18.0,35.0,200,0.1,0,5,0.3,80,1.2,10,0.5,Kahvaltı / Öğle Yemeği,Ana Yemek
+Sigara Böreği,Hamur İşi,320,7.0,20.0,28.0,150,0.1,0,2,0.4,100,0.8,12,0.4,Kahvaltı / Öğle Yemeği,Ara Yemek
 Simit,Hamur İşi,275,10.0,5.0,57.0,0,0.1,0,0,0.5,20,1.5,25,0.8,Kahvaltı,Ana Yemek
 Poğaça (Peynirli),Hamur İşi,350,8.0,18.0,40.0,100,0.1,0,2,0.5,150,1.0,15,0.5,Kahvaltı,Ana Yemek
 Açma (Zeytinli),Hamur İşi,380,7.0,22.0,42.0,50,0.1,0,0,1.0,30,1.5,18,0.5,Kahvaltı,Ana Yemek
-Gözleme (Peynirli),Hamur İşi,280,10.0,12.0,35.0,200,0.2,0,5,0.4,200,1.2,20,1.0,Kahvaltı, Öğle Yemeği,Ana Yemek
-Pirinç Pilavı,Tahıl,130,2.5,2.5,28.0,0,0.1,0,0,0.1,5,0.5,10,0.5,Öğle Yemeği, Akşam Yemeği,Ara Sıcak
-Bulgur Pilavı,Tahıl,110,3.5,1.0,24.0,10,0.2,0,0,0.3,10,1.0,30,1.0,Öğle Yemeği, Akşam Yemeği,Ara Sıcak
-Makarna (Sade),Tahıl,150,5.0,1.0,30.0,0,0.1,0,0,0,5,0.8,10,0.5,Öğle Yemeği, Akşam Yemeği,Ara Sıcak
-Makarna (Salçalı),Tahıl,160,5.0,3.0,32.0,150,0.1,2.0,0,0.2,10,1.0,12,0.6,Öğle Yemeği, Akşam Yemeği,Ara Sıcak
-Erişte (Cevizli),Tahıl,200,6.0,8.0,28.0,20,0.2,0,0,1.0,20,1.2,40,1.0,Öğle Yemeği, Akşam Yemeği,Ara Sıcak
+Gözleme (Peynirli),Hamur İşi,280,10.0,12.0,35.0,200,0.2,0,5,0.4,200,1.2,20,1.0,Kahvaltı / Öğle Yemeği,Ana Yemek
+Pirinç Pilavı,Tahıl,130,2.5,2.5,28.0,0,0.1,0,0,0.1,5,0.5,10,0.5,Öğle Yemeği / Akşam Yemeği,Ara Sıcak
+Bulgur Pilavı,Tahıl,110,3.5,1.0,24.0,10,0.2,0,0,0.3,10,1.0,30,1.0,Öğle Yemeği / Akşam Yemeği,Ara Sıcak
+Makarna (Sade),Tahıl,150,5.0,1.0,30.0,0,0.1,0,0,0,5,0.8,10,0.5,Öğle Yemeği / Akşam Yemeği,Ara Sıcak
+Makarna (Salçalı),Tahıl,160,5.0,3.0,32.0,150,0.1,2.0,0,0.2,10,1.0,12,0.6,Öğle Yemeği / Akşam Yemeği,Ara Sıcak
+Erişte (Cevizli),Tahıl,200,6.0,8.0,28.0,20,0.2,0,0,1.0,20,1.2,40,1.0,Öğle Yemeği / Akşam Yemeği,Ara Sıcak
 Yulaf Ezmesi,Tahıl,370,13.0,7.0,60.0,0,0.5,0,0,1.5,50,4.0,130,3.0,Kahvaltı,Ana Yemek
-Zeytinyağlı Taze Fasulye,Sebze,50,2.0,3.0,6.0,600,0.1,15.0,0,1.0,40,1.5,25,0.3,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Ispanak Yemeği,Sebze,30,3.0,1.0,4.0,9000,0.2,28.0,0,2.0,100,2.7,80,0.5,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Karnabahar Yemeği,Sebze,40,3.0,2.0,5.0,20,0.1,48.0,0,0.1,20,0.5,15,0.3,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Pırasa Yemeği,Sebze,50,1.5,3.0,7.0,1000,0.1,10.0,0,0.5,30,1.0,15,0.2,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Brokoli Haşlama,Sebze,35,2.8,0.4,7.0,600,0.2,89.0,0,0.8,47,0.7,21,0.4,Öğle Yemeği, Akşam Yemeği,Salata
-Kabak Yemeği,Sebze,30,1.5,2.0,4.0,200,0.1,10.0,0,0.2,20,0.5,15,0.3,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-İmam Bayıldı,Sebze,120,2.0,10.0,8.0,150,0.1,5.0,0,0.8,25,0.8,20,0.4,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Mücver (Fırın),Sebze,90,4.0,5.0,8.0,300,0.2,8.0,10,0.5,40,1.0,20,0.6,Öğle Yemeği, Akşam Yemeği,Ara Yemek
-Dolma (Biber),Sebze,150,4.0,8.0,18.0,400,0.2,60.0,0,0.5,20,1.5,25,0.8,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Sarma (Yaprak),Sebze,180,3.0,10.0,22.0,800,0.1,10.0,0,1.5,80,2.0,40,0.5,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Mevsim Salatası,Salata,25,1.0,0.2,5.0,2000,0.1,15.0,0,0.5,30,0.8,15,0.2,Öğle Yemeği, Akşam Yemeği,Salata
-Çoban Salatası,Salata,40,1.5,2.0,5.0,1500,0.1,20.0,0,0.8,25,0.6,18,0.3,Öğle Yemeği, Akşam Yemeği,Salata
-Sezar Salata (Tavuklu),Salata,150,15.0,8.0,5.0,1000,0.3,10.0,5,1.0,80,1.2,25,1.5,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Piyaz,Salata,120,6.0,5.0,15.0,100,0.2,5.0,0,0.8,40,2.0,35,1.0,Öğle Yemeği, Akşam Yemeği,Salata
-Rus Salatası,Salata,180,3.0,15.0,10.0,200,0.1,2.0,2,0.5,20,0.5,10,0.3,Öğle Yemeği, Akşam Yemeği,Salata
-Kuru Fasulye,Bakliyat,120,8.0,1.0,20.0,0,0.4,0,0,0.2,60,3.0,50,1.5,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Nohut Yemeği,Bakliyat,160,9.0,3.0,27.0,50,0.3,1.0,0,0.5,50,2.8,40,1.5,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Yeşil Mercimek Yemeği,Bakliyat,110,9.0,1.0,18.0,50,0.5,1.5,0,0.1,20,3.3,35,1.2,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Barbunya Pilaki,Bakliyat,160,7.0,6.0,22.0,50,0.3,2.0,0,0.5,45,2.5,40,1.0,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Humus,Bakliyat,166,8.0,9.6,14.0,20,0.2,0,0,1.0,40,2.0,30,1.1,Öğle Yemeği, Akşam Yemeği,Meze
-Yoğurt (Tam Yağlı),Süt Ürünü,61,3.5,3.3,4.7,100,0.05,0,2,0.1,120,0.1,12,0.6,Kahvaltı, Öğle Yemeği, Akşam Yemeği,Ara Yemek
-Süzme Yoğurt,Süt Ürünü,90,5.0,6.0,4.0,150,0.06,0,3,0.2,150,0.1,15,0.8,Öğle Yemeği, Akşam Yemeği,Ara Yemek
-Ayran,Süt Ürünü,40,2.0,2.0,3.0,50,0.03,0,1,0.05,80,0.1,8,0.3,Öğle Yemeği, Akşam Yemeği,İçecek
-Cacık,Süt Ürünü,50,3.0,2.5,4.0,80,0.04,2.0,1,0.1,100,0.2,15,0.4,Öğle Yemeği, Akşam Yemeği,Ara Yemek
-Kefir,Süt Ürünü,60,3.5,3.0,5.0,150,0.2,1.0,40,0.1,120,0.1,15,0.5,Kahvaltı, Öğle Yemeği,İçecek
-Süt (Yarım Yağlı),Süt Ürünü,45,3.2,1.5,4.8,100,0.1,0,80,0.1,120,0.1,12,0.4,Kahvaltı, Akşam Yemeği,İçecek
+Zeytinyağlı Taze Fasulye,Sebze,50,2.0,3.0,6.0,600,0.1,15.0,0,1.0,40,1.5,25,0.3,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Ispanak Yemeği,Sebze,30,3.0,1.0,4.0,9000,0.2,28.0,0,2.0,100,2.7,80,0.5,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Karnabahar Yemeği,Sebze,40,3.0,2.0,5.0,20,0.1,48.0,0,0.1,20,0.5,15,0.3,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Pırasa Yemeği,Sebze,50,1.5,3.0,7.0,1000,0.1,10.0,0,0.5,30,1.0,15,0.2,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Brokoli Haşlama,Sebze,35,2.8,0.4,7.0,600,0.2,89.0,0,0.8,47,0.7,21,0.4,Öğle Yemeği / Akşam Yemeği,Salata
+Kabak Yemeği,Sebze,30,1.5,2.0,4.0,200,0.1,10.0,0,0.2,20,0.5,15,0.3,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+İmam Bayıldı,Sebze,120,2.0,10.0,8.0,150,0.1,5.0,0,0.8,25,0.8,20,0.4,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Mücver (Fırın),Sebze,90,4.0,5.0,8.0,300,0.2,8.0,10,0.5,40,1.0,20,0.6,Öğle Yemeği / Akşam Yemeği,Ara Yemek
+Dolma (Biber),Sebze,150,4.0,8.0,18.0,400,0.2,60.0,0,0.5,20,1.5,25,0.8,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Sarma (Yaprak),Sebze,180,3.0,10.0,22.0,800,0.1,10.0,0,1.5,80,2.0,40,0.5,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Mevsim Salatası,Salata,25,1.0,0.2,5.0,2000,0.1,15.0,0,0.5,30,0.8,15,0.2,Öğle Yemeği / Akşam Yemeği,Salata
+Çoban Salatası,Salata,40,1.5,2.0,5.0,1500,0.1,20.0,0,0.8,25,0.6,18,0.3,Öğle Yemeği / Akşam Yemeği,Salata
+Sezar Salata (Tavuklu),Salata,150,15.0,8.0,5.0,1000,0.3,10.0,5,1.0,80,1.2,25,1.5,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Piyaz,Salata,120,6.0,5.0,15.0,100,0.2,5.0,0,0.8,40,2.0,35,1.0,Öğle Yemeği / Akşam Yemeği,Salata
+Rus Salatası,Salata,180,3.0,15.0,10.0,200,0.1,2.0,2,0.5,20,0.5,10,0.3,Öğle Yemeği / Akşam Yemeği,Salata
+Kuru Fasulye,Bakliyat,120,8.0,1.0,20.0,0,0.4,0,0,0.2,60,3.0,50,1.5,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Nohut Yemeği,Bakliyat,160,9.0,3.0,27.0,50,0.3,1.0,0,0.5,50,2.8,40,1.5,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Yeşil Mercimek Yemeği,Bakliyat,110,9.0,1.0,18.0,50,0.5,1.5,0,0.1,20,3.3,35,1.2,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Barbunya Pilaki,Bakliyat,160,7.0,6.0,22.0,50,0.3,2.0,0,0.5,45,2.5,40,1.0,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Humus,Bakliyat,166,8.0,9.6,14.0,20,0.2,0,0,1.0,40,2.0,30,1.1,Öğle Yemeği / Akşam Yemeği,Meze
+Yoğurt (Tam Yağlı),Süt Ürünü,61,3.5,3.3,4.7,100,0.05,0,2,0.1,120,0.1,12,0.6,Kahvaltı / Öğle Yemeği / Akşam Yemeği,Ara Yemek
+Süzme Yoğurt,Süt Ürünü,90,5.0,6.0,4.0,150,0.06,0,3,0.2,150,0.1,15,0.8,Öğle Yemeği / Akşam Yemeği,Ara Yemek
+Ayran,Süt Ürünü,40,2.0,2.0,3.0,50,0.03,0,1,0.05,80,0.1,8,0.3,Öğle Yemeği / Akşam Yemeği,İçecek
+Cacık,Süt Ürünü,50,3.0,2.5,4.0,80,0.04,2.0,1,0.1,100,0.2,15,0.4,Öğle Yemeği / Akşam Yemeği,Ara Yemek
+Kefir,Süt Ürünü,60,3.5,3.0,5.0,150,0.2,1.0,40,0.1,120,0.1,15,0.5,Kahvaltı / Öğle Yemeği,İçecek
+Süt (Yarım Yağlı),Süt Ürünü,45,3.2,1.5,4.8,100,0.1,0,80,0.1,120,0.1,12,0.4,Kahvaltı / Akşam Yemeği,İçecek
 Beyaz Peynir,Kahvaltılık,280,18.0,22.0,2.0,500,0.05,0,15,0.5,500,0.5,20,3.0,Kahvaltı,Ana Yemek
 Kaşar Peyniri,Kahvaltılık,350,26.0,28.0,2.0,800,0.08,0,20,0.7,700,0.2,30,3.5,Kahvaltı,Ana Yemek
 Lor Peyniri,Kahvaltılık,100,16.0,1.0,2.0,50,0.1,0,0,0,80,0.5,10,0.5,Kahvaltı,Ana Yemek
@@ -87,44 +87,44 @@ Kaymak,Kahvaltılık,580,2.0,60.0,3.0,1500,0.05,0,20,1.0,80,0.1,5,0.2,Kahvaltı,
 Reçel (Çilek),Kahvaltılık,280,0.5,0,68.0,10,0.01,5.0,0,0.1,10,0.5,5,0.1,Kahvaltı,Yan Ürün
 Tost (Kaşarlı),Kahvaltılık,320,12.0,16.0,30.0,400,0.2,0,10,0.5,350,1.5,25,2.0,Kahvaltı,Ana Yemek
 Tost (Karışık),Kahvaltılık,360,15.0,20.0,30.0,450,0.3,0,15,0.6,350,2.0,30,2.5,Kahvaltı,Ana Yemek
-Elma,Meyve,52,0.3,0.2,14.0,54,0.04,4.6,0,0.18,6,0.1,5,0.05,Kahvaltı, Öğle Yemeği, Akşam Yemeği,Ara Yemek
-Muz,Meyve,89,1.1,0.3,22.8,64,0.4,8.7,0,0.1,5,0.3,27,0.15,Kahvaltı, Öğle Yemeği, Akşam Yemeği,Ara Yemek
-Portakal,Meyve,47,0.9,0.1,11.8,225,0.08,53.2,0,0.18,40,0.1,10,0.1,Kahvaltı, Öğle Yemeği, Akşam Yemeği,Ara Yemek
-Mandalina,Meyve,53,0.8,0.3,13.0,680,0.08,26.0,0,0.2,37,0.1,12,0.1,Kahvaltı, Öğle Yemeği, Akşam Yemeği,Ara Yemek
-Kivi,Meyve,61,1.1,0.5,15.0,87,0.02,92.0,0,1.5,34,0.3,17,0.1,Kahvaltı, Öğle Yemeği, Akşam Yemeği,Ara Yemek
-Çilek,Meyve,32,0.7,0.3,7.7,12,0.04,58.0,0,0.29,16,0.4,13,0.1,Kahvaltı, Öğle Yemeği, Akşam Yemeği,Ara Yemek
-Karpuz,Meyve,30,0.6,0.2,7.6,569,0.04,8.1,0,0.05,7,0.2,10,0.1,Kahvaltı, Öğle Yemeği, Akşam Yemeği,Ara Yemek
-Kavun,Meyve,34,0.8,0.2,8.0,3380,0.05,36.0,0,0.1,9,0.2,12,0.2,Kahvaltı, Öğle Yemeği, Akşam Yemeği,Ara Yemek
-Üzüm,Meyve,69,0.7,0.2,18.0,66,0.09,3.2,0,0.19,10,0.3,7,0.1,Kahvaltı, Öğle Yemeği, Akşam Yemeği,Ara Yemek
-Armut,Meyve,57,0.4,0.1,15.0,25,0.03,4.0,0,0.1,9,0.2,7,0.1,Kahvaltı, Öğle Yemeği, Akşam Yemeği,Ara Yemek
-Şeftali,Meyve,39,0.9,0.3,9.5,326,0.02,6.6,0,0.7,6,0.3,9,0.2,Kahvaltı, Öğle Yemeği, Akşam Yemeği,Ara Yemek
-Kiraz,Meyve,63,1.1,0.2,16.0,64,0.04,7.0,0,0.1,13,0.4,11,0.1,Kahvaltı, Öğle Yemeği, Akşam Yemeği,Ara Yemek
-İncir (Taze),Meyve,74,0.8,0.3,19.0,142,0.06,2.0,0,0.1,35,0.4,17,0.1,Kahvaltı, Öğle Yemeği, Akşam Yemeği,Ara Yemek
-Ceviz,Kuruyemiş,654,15.0,65.0,14.0,20,0.5,1.3,0,0.7,98,2.9,158,3.1,Kahvaltı, Öğle Yemeği, Akşam Yemeği,Ara Yemek
-Fındık,Kuruyemiş,628,15.0,61.0,17.0,20,0.6,6.3,0,15.0,114,4.7,163,2.5,Kahvaltı, Öğle Yemeği, Akşam Yemeği,Ara Yemek
-Badem,Kuruyemiş,579,21.0,49.0,22.0,1,0.2,0,0,26.0,264,3.7,268,3.0,Kahvaltı, Öğle Yemeği, Akşam Yemeği,Ara Yemek
-Ay Çekirdeği,Kuruyemiş,584,20.0,51.0,20.0,50,1.5,0,0,35.0,78,5.3,325,5.0,Kahvaltı, Öğle Yemeği, Akşam Yemeği,Ara Yemek
-Kajun,Kuruyemiş,553,18.0,44.0,30.0,0,0.4,0.5,0,0.9,37,6.7,292,5.8,Kahvaltı, Öğle Yemeği, Akşam Yemeği,Ara Yemek
-Antep Fıstığı,Kuruyemiş,560,20.0,45.0,27.0,415,1.3,5.0,0,2.3,105,3.9,121,2.2,Kahvaltı, Öğle Yemeği, Akşam Yemeği,Ara Yemek
-Kuru Kayısı,Kuruyemiş,241,3.4,0.5,63.0,3600,0.1,1.0,0,4.0,55,2.7,32,0.4,Kahvaltı, Öğle Yemeği, Akşam Yemeği,Ara Yemek
-Kuru Üzüm,Kuruyemiş,299,3.0,0.5,79.0,0,0.1,2.0,0,0.1,50,1.9,32,0.2,Kahvaltı, Öğle Yemeği, Akşam Yemeği,Ara Yemek
-Leblebi (Sarı),Kuruyemiş,360,19.0,6.0,58.0,30,0.2,0,0,0.5,120,6.0,110,3.0,Kahvaltı, Öğle Yemeği, Akşam Yemeği,Ara Yemek
-Baklava (1 Dilim),Tatlı,400,5.0,25.0,45.0,50,0.1,0,0,0.5,20,0.5,10,0.5,Öğle Yemeği, Akşam Yemeği,Tatlı
-Sütlaç,Tatlı,110,3.0,2.5,20.0,100,0.05,0.5,2,0.1,100,0.2,15,0.5,Öğle Yemeği, Akşam Yemeği,Tatlı
-Kazandibi,Tatlı,130,3.5,3.0,22.0,110,0.05,0,2,0.1,110,0.2,15,0.5,Öğle Yemeği, Akşam Yemeği,Tatlı
-Künefe,Tatlı,450,8.0,25.0,50.0,200,0.1,0,5,0.8,150,0.8,20,1.0,Öğle Yemeği, Akşam Yemeği,Tatlı
-Profiterol,Tatlı,250,5.0,15.0,30.0,100,0.1,0,2,0.5,40,0.6,15,0.5,Öğle Yemeği, Akşam Yemeği,Tatlı
-Revani,Tatlı,350,5.0,15.0,50.0,100,0.1,0,5,0.3,50,0.5,10,0.4,Öğle Yemeği, Akşam Yemeği,Tatlı
-Şekerpare,Tatlı,380,4.0,18.0,55.0,80,0.1,0,2,0.4,30,0.6,10,0.3,Öğle Yemeği, Akşam Yemeği,Tatlı
-Lokum (Sade),Tatlı,360,0.5,0.5,88.0,0,0,0,0,0,5,0.1,2,0.1,Öğle Yemeği, Akşam Yemeği,Tatlı
-Dondurma (Sade),Tatlı,207,3.5,11.0,24.0,400,0.1,0,15,0.2,128,0.1,14,0.6,Öğle Yemeği, Akşam Yemeği,Tatlı
-Bitter Çikolata (%70),Tatlı,580,8.0,42.0,36.0,50,0.1,0,0,2.0,70,12.0,228,3.3,Öğle Yemeği, Akşam Yemeği,Tatlı
-Çay (Şekersiz),İçecek,1,0,0,0.2,0,0,0,0,0,0,0,1,0.02,Kahvaltı, Öğle Yemeği, Akşam Yemeği,İçecek
-Türk Kahvesi (Sade),İçecek,7,0.5,0.1,1.0,0,0,0,0,0,5,0.1,8,0.05,Kahvaltı, Öğle Yemeği, Akşam Yemeği,İçecek
-Latte (Sütlü Kahve),İçecek,50,3.0,2.5,4.0,100,0.1,0,40,0.1,100,0.1,12,0.4,Kahvaltı, Öğle Yemeği, Akşam Yemeği,İçecek
-Maden Suyu,İçecek,0,0,0,0,0,0,0,0,0,50,0,20,0,Kahvaltı, Öğle Yemeği, Akşam Yemeği,İçecek
-Limonata (Ev Yapımı),İçecek,45,0.2,0.1,11.0,10,0,20.0,0,0.1,5,0.1,2,0.05,Kahvaltı, Öğle Yemeği, Akşam Yemeği,İçecek
-Şalgam Suyu,İçecek,10,0.5,0.1,2.0,50,0.1,5.0,0,0.1,20,0.5,10,0.2,Öğle Yemeği, Akşam Yemeği,İçecek
-Hamburger (Big),FastFood,280,14.0,15.0,30.0,50,0.3,1.0,0,0.5,50,2.5,20,2.5,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Pizza (Karışık - 1 Dilim),FastFood,280,12.0,10.0,35.0,200,0.2,3.0,2,0.5,150,1.5,15,1.0,Öğle Yemeği, Akşam Yemeği,Ana Yemek
-Patates Kızartması,FastFood,312,3.4,15.0,41.0,0,0.4,10.0,0,1.5,18,0.8,30,0.5,Öğle Yemeği, Akşam Yemeği,Ara Yemek
+Elma,Meyve,52,0.3,0.2,14.0,54,0.04,4.6,0,0.18,6,0.1,5,0.05,Kahvaltı / Öğle Yemeği / Akşam Yemeği,Ara Yemek
+Muz,Meyve,89,1.1,0.3,22.8,64,0.4,8.7,0,0.1,5,0.3,27,0.15,Kahvaltı / Öğle Yemeği / Akşam Yemeği,Ara Yemek
+Portakal,Meyve,47,0.9,0.1,11.8,225,0.08,53.2,0,0.18,40,0.1,10,0.1,Kahvaltı / Öğle Yemeği / Akşam Yemeği,Ara Yemek
+Mandalina,Meyve,53,0.8,0.3,13.0,680,0.08,26.0,0,0.2,37,0.1,12,0.1,Kahvaltı / Öğle Yemeği / Akşam Yemeği,Ara Yemek
+Kivi,Meyve,61,1.1,0.5,15.0,87,0.02,92.0,0,1.5,34,0.3,17,0.1,Kahvaltı / Öğle Yemeği / Akşam Yemeği,Ara Yemek
+Çilek,Meyve,32,0.7,0.3,7.7,12,0.04,58.0,0,0.29,16,0.4,13,0.1,Kahvaltı / Öğle Yemeği / Akşam Yemeği,Ara Yemek
+Karpuz,Meyve,30,0.6,0.2,7.6,569,0.04,8.1,0,0.05,7,0.2,10,0.1,Kahvaltı / Öğle Yemeği / Akşam Yemeği,Ara Yemek
+Kavun,Meyve,34,0.8,0.2,8.0,3380,0.05,36.0,0,0.1,9,0.2,12,0.2,Kahvaltı / Öğle Yemeği / Akşam Yemeği,Ara Yemek
+Üzüm,Meyve,69,0.7,0.2,18.0,66,0.09,3.2,0,0.19,10,0.3,7,0.1,Kahvaltı / Öğle Yemeği / Akşam Yemeği,Ara Yemek
+Armut,Meyve,57,0.4,0.1,15.0,25,0.03,4.0,0,0.1,9,0.2,7,0.1,Kahvaltı / Öğle Yemeği / Akşam Yemeği,Ara Yemek
+Şeftali,Meyve,39,0.9,0.3,9.5,326,0.02,6.6,0,0.7,6,0.3,9,0.2,Kahvaltı / Öğle Yemeği / Akşam Yemeği,Ara Yemek
+Kiraz,Meyve,63,1.1,0.2,16.0,64,0.04,7.0,0,0.1,13,0.4,11,0.1,Kahvaltı / Öğle Yemeği / Akşam Yemeği,Ara Yemek
+İncir (Taze),Meyve,74,0.8,0.3,19.0,142,0.06,2.0,0,0.1,35,0.4,17,0.1,Kahvaltı / Öğle Yemeği / Akşam Yemeği,Ara Yemek
+Ceviz,Kuruyemiş,654,15.0,65.0,14.0,20,0.5,1.3,0,0.7,98,2.9,158,3.1,Kahvaltı / Öğle Yemeği / Akşam Yemeği,Ara Yemek
+Fındık,Kuruyemiş,628,15.0,61.0,17.0,20,0.6,6.3,0,15.0,114,4.7,163,2.5,Kahvaltı / Öğle Yemeği / Akşam Yemeği,Ara Yemek
+Badem,Kuruyemiş,579,21.0,49.0,22.0,1,0.2,0,0,26.0,264,3.7,268,3.0,Kahvaltı / Öğle Yemeği / Akşam Yemeği,Ara Yemek
+Ay Çekirdeği,Kuruyemiş,584,20.0,51.0,20.0,50,1.5,0,0,35.0,78,5.3,325,5.0,Kahvaltı / Öğle Yemeği / Akşam Yemeği,Ara Yemek
+Kajun,Kuruyemiş,553,18.0,44.0,30.0,0,0.4,0.5,0,0.9,37,6.7,292,5.8,Kahvaltı / Öğle Yemeği / Akşam Yemeği,Ara Yemek
+Antep Fıstığı,Kuruyemiş,560,20.0,45.0,27.0,415,1.3,5.0,0,2.3,105,3.9,121,2.2,Kahvaltı / Öğle Yemeği / Akşam Yemeği,Ara Yemek
+Kuru Kayısı,Kuruyemiş,241,3.4,0.5,63.0,3600,0.1,1.0,0,4.0,55,2.7,32,0.4,Kahvaltı / Öğle Yemeği / Akşam Yemeği,Ara Yemek
+Kuru Üzüm,Kuruyemiş,299,3.0,0.5,79.0,0,0.1,2.0,0,0.1,50,1.9,32,0.2,Kahvaltı / Öğle Yemeği / Akşam Yemeği,Ara Yemek
+Leblebi (Sarı),Kuruyemiş,360,19.0,6.0,58.0,30,0.2,0,0,0.5,120,6.0,110,3.0,Kahvaltı / Öğle Yemeği / Akşam Yemeği,Ara Yemek
+Baklava (1 Dilim),Tatlı,400,5.0,25.0,45.0,50,0.1,0,0,0.5,20,0.5,10,0.5,Öğle Yemeği / Akşam Yemeği,Tatlı
+Sütlaç,Tatlı,110,3.0,2.5,20.0,100,0.05,0.5,2,0.1,100,0.2,15,0.5,Öğle Yemeği / Akşam Yemeği,Tatlı
+Kazandibi,Tatlı,130,3.5,3.0,22.0,110,0.05,0,2,0.1,110,0.2,15,0.5,Öğle Yemeği / Akşam Yemeği,Tatlı
+Künefe,Tatlı,450,8.0,25.0,50.0,200,0.1,0,5,0.8,150,0.8,20,1.0,Öğle Yemeği / Akşam Yemeği,Tatlı
+Profiterol,Tatlı,250,5.0,15.0,30.0,100,0.1,0,2,0.5,40,0.6,15,0.5,Öğle Yemeği / Akşam Yemeği,Tatlı
+Revani,Tatlı,350,5.0,15.0,50.0,100,0.1,0,5,0.3,50,0.5,10,0.4,Öğle Yemeği / Akşam Yemeği,Tatlı
+Şekerpare,Tatlı,380,4.0,18.0,55.0,80,0.1,0,2,0.4,30,0.6,10,0.3,Öğle Yemeği / Akşam Yemeği,Tatlı
+Lokum (Sade),Tatlı,360,0.5,0.5,88.0,0,0,0,0,0,5,0.1,2,0.1,Öğle Yemeği / Akşam Yemeği,Tatlı
+Dondurma (Sade),Tatlı,207,3.5,11.0,24.0,400,0.1,0,15,0.2,128,0.1,14,0.6,Öğle Yemeği / Akşam Yemeği,Tatlı
+Bitter Çikolata (%70),Tatlı,580,8.0,42.0,36.0,50,0.1,0,0,2.0,70,12.0,228,3.3,Öğle Yemeği / Akşam Yemeği,Tatlı
+Çay (Şekersiz),İçecek,1,0,0,0.2,0,0,0,0,0,0,0,1,0.02,Kahvaltı / Öğle Yemeği / Akşam Yemeği,İçecek
+Türk Kahvesi (Sade),İçecek,7,0.5,0.1,1.0,0,0,0,0,0,5,0.1,8,0.05,Kahvaltı / Öğle Yemeği / Akşam Yemeği,İçecek
+Latte (Sütlü Kahve),İçecek,50,3.0,2.5,4.0,100,0.1,0,40,0.1,100,0.1,12,0.4,Kahvaltı / Öğle Yemeği / Akşam Yemeği,İçecek
+Maden Suyu,İçecek,0,0,0,0,0,0,0,0,0,50,0,20,0,Kahvaltı / Öğle Yemeği / Akşam Yemeği,İçecek
+Limonata (Ev Yapımı),İçecek,45,0.2,0.1,11.0,10,0,20.0,0,0.1,5,0.1,2,0.05,Kahvaltı / Öğle Yemeği / Akşam Yemeği,İçecek
+Şalgam Suyu,İçecek,10,0.5,0.1,2.0,50,0.1,5.0,0,0.1,20,0.5,10,0.2,Öğle Yemeği / Akşam Yemeği,İçecek
+Hamburger (Big),FastFood,280,14.0,15.0,30.0,50,0.3,1.0,0,0.5,50,2.5,20,2.5,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Pizza (Karışık - 1 Dilim),FastFood,280,12.0,10.0,35.0,200,0.2,3.0,2,0.5,150,1.5,15,1.0,Öğle Yemeği / Akşam Yemeği,Ana Yemek
+Patates Kızartması,FastFood,312,3.4,15.0,41.0,0,0.4,10.0,0,1.5,18,0.8,30,0.5,Öğle Yemeği / Akşam Yemeği,Ara Yemek
