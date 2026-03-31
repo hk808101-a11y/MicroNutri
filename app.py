@@ -59,7 +59,6 @@ def save_meal_and_next():
     current = st.session_state.w_meal_type
     st.session_state.meal_state["current_meal"] = current
     
-    # Bir sonraki öğünü belirleme
     if current == "Kahvaltı":
         nxt, cats = "Öğle Yemeği", ["Çorba", "Et", "Sebze", "Bakliyat", "Tahıl", "Ana Yemek", "Ara Yemek"]
     elif current == "Öğle Yemeği":
@@ -91,40 +90,23 @@ nutrient_info = {
     "zinc_mg": "Bağışıklık, yara iyileşmesi ve hormon dengesi için gereklidir."
 }
 
-# --- YARDIMCI ANALİZ FONKSİYONU ---
 def analyze_nutrient(label, value, target, unit, key_name):
     ratio = value / target if target > 0 else 0
-    
     if ratio < 0.5:
-        status_class = "nutrient-low"
-        status_text = "⚠️ KRİTİK AZ"
-        advice = "Çok yetersiz kaldı. Takviye edici gıdalar seçmelisin."
+        status_class, status_text, advice = "nutrient-low", "⚠️ KRİTİK AZ", "Çok yetersiz kaldı. Takviye edici gıdalar seçmelisin."
     elif ratio < 0.85:
-        status_class = "nutrient-low"
-        status_text = "📉 AZ"
-        advice = "Hedefin altında, biraz daha artırabilirsin."
+        status_class, status_text, advice = "nutrient-low", "📉 AZ", "Hedefin altında, biraz daha artırabilirsin."
     elif ratio <= 1.15:
-        status_class = "nutrient-perfect"
-        status_text = "✅ İDEAL"
-        advice = "Harika! Tam olması gereken seviyede."
+        status_class, status_text, advice = "nutrient-perfect", "✅ İDEAL", "Harika! Tam olması gereken seviyede."
     else:
-        status_class = "nutrient-high"
-        status_text = "📈 FAZLA"
-        advice = "Hedefi aştın, diğer öğünlerde dikkat et."
+        status_class, status_text, advice = "nutrient-high", "📈 FAZLA", "Hedefi aştın, diğer öğünlerde dikkat et."
         
     desc = nutrient_info.get(key_name, "")
-    
     st.markdown(f"""
     <div class="nutrient-row {status_class}">
         <div style="display:flex; justify-content:space-between; align-items:center;">
-            <div>
-                <h4 style="margin:0;">{label}</h4>
-                <small style="color:#555;">{desc}</small>
-            </div>
-            <div style="text-align:right;">
-                <h3 style="margin:0;">{value:.1f} / {int(target)} {unit}</h3>
-                <strong>{status_text}</strong>
-            </div>
+            <div><h4 style="margin:0;">{label}</h4><small style="color:#555;">{desc}</small></div>
+            <div style="text-align:right;"><h3 style="margin:0;">{value:.1f} / {int(target)} {unit}</h3><strong>{status_text}</strong></div>
         </div>
         <p style="margin-top:5px; font-style:italic;">💡 {advice}</p>
     </div>
@@ -138,53 +120,41 @@ with c2:
     st.caption("Detaylı Besin Analiz Raporu ve Akıllı Karar Destek Sistemi")
 
 # ==========================================
-# 🏁 SAYFA 1: PROFİL
+# 🏁 SAYFA 1 VE 2
 # ==========================================
 if st.session_state.step == 1:
     st.markdown('<div class="step-indicator">Adım 1/3: Profilini Oluştur</div>', unsafe_allow_html=True)
-    
     col1, col2 = st.columns(2)
     with col1:
         st.subheader("👤 Kişisel Bilgiler")
-        st.radio("Cinsiyet", ["Erkek", "Kadın"], horizontal=True, key="w_gender", 
-                 index=0 if st.session_state.user_profile["gender"]=="Erkek" else 1)
+        st.radio("Cinsiyet", ["Erkek", "Kadın"], horizontal=True, key="w_gender", index=0 if st.session_state.user_profile["gender"]=="Erkek" else 1)
         st.number_input("Yaş", 10, 100, st.session_state.user_profile["age"], key="w_age")
         st.number_input("Boy (cm)", 100, 250, st.session_state.user_profile["height"], key="w_height")
         st.number_input("Kilo (kg)", 30, 200, st.session_state.user_profile["weight"], key="w_weight")
     with col2:
         st.subheader("🎯 Hedefler")
         act_opts = ["Hareketsiz (Masa başı)", "Az Hareketli (1-3 spor)", "Orta Hareketli (3-5 spor)", "Çok Hareketli"]
-        try: act_idx = act_opts.index(st.session_state.user_profile.get("activity", act_opts[0]))
-        except: act_idx = 0
+        act_idx = act_opts.index(st.session_state.user_profile.get("activity", act_opts[0])) if st.session_state.user_profile.get("activity") in act_opts else 0
         st.selectbox("Hareket Seviyesi", act_opts, index=act_idx, key="w_activity")
         
         goal_opts = ["Kilo Koru", "Kilo Ver (-500 kcal)", "Kilo Al (+400 kcal)"]
-        try: goal_idx = goal_opts.index(st.session_state.user_profile.get("goal", goal_opts[0]))
-        except: goal_idx = 0
+        goal_idx = goal_opts.index(st.session_state.user_profile.get("goal", goal_opts[0])) if st.session_state.user_profile.get("goal") in goal_opts else 0
         st.radio("Hedef", goal_opts, index=goal_idx, key="w_goal")
-
     st.markdown("---")
     st.button("Kaydet ve İlerle 👉", on_click=save_profile_and_next)
 
-# ==========================================
-# 🥗 SAYFA 2: YEMEK SEÇİMİ
-# ==========================================
 elif st.session_state.step == 2:
     st.markdown('<div class="step-indicator">Adım 2/3: Ne Yiyorsun?</div>', unsafe_allow_html=True)
-    
     col_meal, col_select = st.columns([1, 2])
     with col_meal:
         meal_opts = ["Kahvaltı", "Öğle Yemeği", "Akşam Yemeği"]
-        try: meal_idx = meal_opts.index(st.session_state.meal_state.get("current_meal", meal_opts[0]))
-        except: meal_idx = 0
+        meal_idx = meal_opts.index(st.session_state.meal_state.get("current_meal", meal_opts[0])) if st.session_state.meal_state.get("current_meal") in meal_opts else 0
         st.radio("Zaman Dilimi", meal_opts, index=meal_idx, key="w_meal_type")
-        
     with col_select:
         st.multiselect("🍽️ Menüden Seç:", df['name'].tolist(), key="w_selected_foods")
 
     temp_basket = []
     selected = st.session_state.w_selected_foods
-    
     if selected:
         st.markdown("---")
         st.info("👇 Gramajları ayarlamayı unutma!")
@@ -199,9 +169,7 @@ elif st.session_state.step == 2:
                     if pd.api.types.is_numeric_dtype(type(item_full[k])):
                         item_full[k] = item_full[k] * ratio
                 temp_basket.append(item_full)
-    
     st.session_state.meal_state["basket"] = temp_basket
-    
     st.markdown("---")
     b1, b2 = st.columns([1, 4])
     with b1: st.button("👈 Geri", on_click=go_back)
@@ -215,19 +183,16 @@ elif st.session_state.step == 2:
 elif st.session_state.step == 3:
     st.markdown('<div class="step-indicator">Sonuç: Detaylı Beslenme Karnesi</div>', unsafe_allow_html=True)
     
-    # --- 1. HESAPLAMALAR ---
     profile = st.session_state.user_profile
     meal_data = st.session_state.meal_state
     gender, weight, height, age = profile["gender"], profile["weight"], profile["height"], profile["age"]
     
     mults = {"Hareketsiz": 1.2, "Az Hareketli": 1.375, "Orta Hareketli": 1.55, "Çok Hareketli": 1.725}
-    act_key = profile["activity"].split(" (")[0]
-    act_mult = mults.get(act_key, 1.2)
+    act_mult = mults.get(profile["activity"].split(" (")[0], 1.2)
     bmr = (10 * weight) + (6.25 * height) - (5 * age) + (5 if gender == "Erkek" else -161)
     tdee = bmr * act_mult
     goal_cal = tdee - 500 if "Ver" in profile["goal"] else tdee + 400 if "Al" in profile["goal"] else tdee
     
-    # ÖĞÜN BAŞINA DÜŞEN HEDEFLER (Günlük ihtiyacın 3'te 1'i)
     targets = {
         "calories": goal_cal / 3,
         "protein": (goal_cal * 0.20 / 4) / 3,
@@ -243,10 +208,8 @@ elif st.session_state.step == 3:
     basket = meal_data["basket"]
     totals = {k: sum(x.get(k, 0) for x in basket) for k in targets.keys()}
 
-    # --- SEKMELİ RAPORLAMA ---
-    tab1, tab2, tab3 = st.tabs(["📊 Özet Durum", "📋 Detaylı Karne", "💡 Akıllı Kombinasyon Önerisi"])
+    tab1, tab2, tab3 = st.tabs(["📊 Özet Durum", "📋 Detaylı Karne", "💡 Akıllı Diyetisyen Önerisi"])
 
-    # --- TAB 1: ÖZET ---
     with tab1:
         st.subheader("🔥 Kalori ve Enerji Dengesi")
         rem_cal = targets['calories'] - totals['calories']
@@ -254,19 +217,15 @@ elif st.session_state.step == 3:
         with c1: st.markdown(f"<div class='metric-container'><h3>Hedef</h3><h2>{int(targets['calories'])} kcal</h2></div>", unsafe_allow_html=True)
         with c2: st.markdown(f"<div class='metric-container'><h3>Alınan</h3><h2>{int(totals['calories'])} kcal</h2></div>", unsafe_allow_html=True)
         with c3: 
-            lbl = "Açık (Kalan)" if rem_cal > 0 else "Fazlalık"
-            color = "#4CAF50" if rem_cal > 0 else "#FF4B4B"
+            lbl, color = ("Açık (Kalan)", "#4CAF50") if rem_cal > 0 else ("Fazlalık", "#FF4B4B")
             st.markdown(f"<div class='metric-container' style='border-left: 5px solid {color}'><h3>{lbl}</h3><h2>{abs(int(rem_cal))} kcal</h2></div>", unsafe_allow_html=True)
-        
         st.progress(min(totals['calories'] / (targets['calories'] if targets['calories']>0 else 1), 1.0))
 
-    # --- TAB 2: DETAYLI KARNE ---
     with tab2:
         st.subheader("💪 Makro Besinler")
         analyze_nutrient("Protein", totals["protein"], targets["protein"], "g", "protein")
         analyze_nutrient("Karbonhidrat", totals["carbs"], targets["carbs"], "g", "carbs")
         analyze_nutrient("Yağ", totals["fat"], targets["fat"], "g", "fat")
-        
         st.markdown("---")
         st.subheader("💊 Vitaminler")
         col_v1, col_v2 = st.columns(2)
@@ -276,7 +235,6 @@ elif st.session_state.step == 3:
         with col_v2:
             analyze_nutrient("D Vitamini", totals["vit_d_iu"], targets["vit_d_iu"], "IU", "vit_d_iu")
             analyze_nutrient("E Vitamini", totals["vit_e_mg"], targets["vit_e_mg"], "mg", "vit_e_mg")
-            
         st.markdown("---")
         st.subheader("🪨 Mineraller")
         col_m1, col_m2 = st.columns(2)
@@ -287,34 +245,31 @@ elif st.session_state.step == 3:
             analyze_nutrient("Magnezyum", totals["magnesium_mg"], targets["magnesium_mg"], "mg", "magnesium_mg")
             analyze_nutrient("Çinko", totals["zinc_mg"], targets["zinc_mg"], "mg", "zinc_mg")
 
-    # --- TAB 3: YENİ AKILLI ÇOKLU EKSİKLİK ÖNERİSİ ---
+    # --- TAB 3: KALORİ KONTROLLÜ FİYAT/PERFORMANS MANTIĞI ---
     with tab3:
         st.subheader(f"🔮 Gelecek Öğün Planı: {meal_data['next_meal_name']}")
         
-        # 1. Eksikleri bul
         deficiencies = {}
         for k, v in targets.items():
-            if k in ["calories", "protein", "carbs", "fat"]: continue # Makroları geç
-            if totals[k] < (v * 0.6): # Hedefin %60'ından azsa eksik say
+            if k in ["calories", "protein", "carbs", "fat"]: continue 
+            if totals[k] < (v * 0.6): 
                 deficiencies[k] = (v - totals[k]) / v
         
         if deficiencies:
-            # 2. Eksikleri büyükten küçüğe sırala ve en büyük 3 tanesini al
-            sorted_deficiencies = sorted(deficiencies.items(), key=lambda x: x[1], reverse=True)
-            top_3_deficiencies = sorted_deficiencies[:3] 
+            sorted_deficiencies = sorted(deficiencies.items(), key=lambda x: x[1], reverse=True)[:3]
             
             st.error("Bu süreçte bazı mineral ve vitamin alımların yetersiz kaldı.")
-            st.info(f"💡 {meal_data['next_meal_name']} öğününde bu eksiklikleri topluca kapatacak Kombinasyon Önerisi:")
+            st.info(f"💡 {meal_data['next_meal_name']} öğününde bu eksiklikleri kalori hedefine uygun şekilde kapatacak Diyetisyen Önerisi:")
             
             sc1, sc2, sc3 = st.columns(3)
-            used_foods = [] # Aynı yemeği tekrar önermemek için liste
-            
-            # --- TERCÜMAN EKLENDİ ---
-            # Eğer sonraki öğün "Yarınki Kahvaltı" ise, CSV'de "Kahvaltı" olarak arat
+            used_foods = [] 
             search_meal = "Kahvaltı" if meal_data['next_meal_name'] == "Yarınki Kahvaltı" else meal_data['next_meal_name']
             
-            # Her bir eksiklik için ayrı bir sütun oluştur ve yemek seç
-            for idx, (nutrient_key, deficiency_ratio) in enumerate(top_3_deficiencies):
+            # Kalori Sınırı Belirleme (1 öğün için önerilecek tek bir tabağın max kalorisi)
+            # Hedef kalorinin 1/3'ünü geçmesin. Öğle/Akşam ise porsiyon başına biraz esneklik payı.
+            max_cal_per_item = (targets['calories'] / 3) * 1.5 
+            
+            for idx, (nutrient_key, deficiency_ratio) in enumerate(sorted_deficiencies):
                 clean_name = nutrient_key.replace("_mg", "").replace("_iu", "").upper()
                 
                 with [sc1, sc2, sc3][idx]:
@@ -323,22 +278,35 @@ elif st.session_state.step == 3:
                     else:
                         next_foods = df[df['category'].isin(meal_data['next_cats'])]
                     
-                    # Daha önce önerilenleri listeden çıkar
                     available_foods = next_foods[~next_foods['name'].isin(used_foods)]
                     
                     if not available_foods.empty:
-                        best_food = available_foods.sort_values(by=nutrient_key, ascending=False).iloc[0]
-                        used_foods.append(best_food['name'])
+                        # 1. Aşama: Kalorisi devasa olan yiyecekleri (örn: Tereyağı, Kajun) ele
+                        calorie_filtered = available_foods[available_foods['calories'] <= max_cal_per_item].copy()
                         
+                        # Eğer hepsi elendiyse çok katı filtre uygulamayalım, diyeti bozmamak adına hepsini geri al
+                        if calorie_filtered.empty:
+                            calorie_filtered = available_foods.copy()
+
+                        # 2. Aşama: Fiyat/Performans (Nutrient Density) Hesaplama
+                        # 1 kalori başına ne kadar vitamin verdiğini buluyoruz
+                        # Sıfıra bölünme hatasını engellemek için kalorisi 0 olanları (çay, maden suyu) 1 kabul et
+                        calorie_filtered['fiyat_performans'] = calorie_filtered[nutrient_key] / calorie_filtered['calories'].replace(0, 1)
+                        
+                        # Fiyat/Performans oranı en yüksek (yani en az kaloriyle en çok vitamin veren) yemeği seç
+                        best_food = calorie_filtered.sort_values(by='fiyat_performans', ascending=False).iloc[0]
+                        
+                        used_foods.append(best_food['name'])
                         tur_baslik = best_food['Tur'] if 'Tur' in best_food.index and pd.notna(best_food['Tur']) else best_food['category']
                         
                         st.markdown(f"""
                         <div class="nutrient-card">
                             <p style="color:#888; font-size:12px; margin-bottom:0; text-transform:uppercase;">{tur_baslik}</p>
-                            <h3 style="margin-top:5px; margin-bottom:15px; font-size:18px;">{best_food['name']}</h3>
-                            <div style="background-color:#fff0f0; padding:10px; border-radius:8px;">
+                            <h3 style="margin-top:5px; margin-bottom:5px; font-size:18px;">{best_food['name']}</h3>
+                            <span style="background-color:#ffebeb; color:#FF4B4B; padding:3px 8px; border-radius:10px; font-size:12px; font-weight:bold;">🔥 {int(best_food['calories'])} kcal</span>
+                            <div style="background-color:#f8f9fa; padding:10px; border-radius:8px; margin-top:15px;">
                                 <p style="font-size:12px; color:#555; margin-bottom:0;">Bunu tamamlar:</p>
-                                <h2 style="color:#FF4B4B; margin:0;">{clean_name}</h2>
+                                <h2 style="color:#00b894; margin:0;">{clean_name}</h2>
                                 <p style="font-size:14px; color:#333; margin-top:5px;"><b>+{best_food[nutrient_key]:.1f}</b> eklenecek</p>
                             </div>
                         </div>
