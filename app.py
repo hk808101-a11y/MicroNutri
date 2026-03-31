@@ -309,26 +309,27 @@ elif st.session_state.step == 3:
             sc1, sc2, sc3 = st.columns(3)
             used_foods = [] # Aynı yemeği tekrar önermemek için liste
             
+            # --- TERCÜMAN EKLENDİ ---
+            # Eğer sonraki öğün "Yarınki Kahvaltı" ise, CSV'de "Kahvaltı" olarak arat
+            search_meal = "Kahvaltı" if meal_data['next_meal_name'] == "Yarınki Kahvaltı" else meal_data['next_meal_name']
+            
             # Her bir eksiklik için ayrı bir sütun oluştur ve yemek seç
             for idx, (nutrient_key, deficiency_ratio) in enumerate(top_3_deficiencies):
                 clean_name = nutrient_key.replace("_mg", "").replace("_iu", "").upper()
                 
                 with [sc1, sc2, sc3][idx]:
-                    # Eğer 'Ogun' sütunu varsa o öğüne uygun olanları filtrele, yoksa hepsinden seç
                     if 'Ogun' in df.columns:
-                        next_foods = df[df['Ogun'].str.contains(meal_data['next_meal_name'], na=False, case=False)]
+                        next_foods = df[df['Ogun'].str.contains(search_meal, na=False, case=False)]
                     else:
                         next_foods = df[df['category'].isin(meal_data['next_cats'])]
                     
-                    # Daha önce önerilenleri listeden çıkar (Meyve, meyve, meyve önermesin diye)
+                    # Daha önce önerilenleri listeden çıkar
                     available_foods = next_foods[~next_foods['name'].isin(used_foods)]
                     
                     if not available_foods.empty:
-                        # O spesifik eksiği en iyi kapatan yemeği bul
                         best_food = available_foods.sort_values(by=nutrient_key, ascending=False).iloc[0]
-                        used_foods.append(best_food['name']) # Listeye ekle
+                        used_foods.append(best_food['name'])
                         
-                        # Türü belirle
                         tur_baslik = best_food['Tur'] if 'Tur' in best_food.index and pd.notna(best_food['Tur']) else best_food['category']
                         
                         st.markdown(f"""
