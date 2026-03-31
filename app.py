@@ -15,6 +15,7 @@ st.markdown("""
     .nutrient-low { background-color: #fff5f5; border-left: 5px solid #ff7675; }
     .nutrient-high { background-color: #fff0db; border-left: 5px solid #fdcb6e; }
     .step-indicator { font-size: 1.2rem; font-weight: bold; color: #555; text-align: center; padding: 10px; background-color: #eef; border-radius: 8px; margin-bottom: 20px; }
+    .nutrient-card { background-color: #ffffff; padding: 15px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; height: 100%; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -25,11 +26,11 @@ def get_data():
 
 try:
     df = get_data()
-except:
-    st.error("❌ 'foods.csv' dosyası bulunamadı.")
+except Exception as e:
+    st.error("❌ 'foods.csv' dosyası bulunamadı veya okunamadı. Lütfen dosyanın aynı klasörde olduğundan emin ol.")
     st.stop()
 
-# --- KALICI HAFIZA ---
+# --- KALICI HAFIZA (SESSION STATE) ---
 if 'step' not in st.session_state: st.session_state.step = 1
 if 'user_profile' not in st.session_state:
     st.session_state.user_profile = {
@@ -57,12 +58,15 @@ def save_profile_and_next():
 def save_meal_and_next():
     current = st.session_state.w_meal_type
     st.session_state.meal_state["current_meal"] = current
+    
+    # Bir sonraki öğünü belirleme
     if current == "Kahvaltı":
-        nxt, cats = "Öğle Yemeği", ["Çorba", "Et", "Sebze", "Bakliyat", "Tahıl"]
+        nxt, cats = "Öğle Yemeği", ["Çorba", "Et", "Sebze", "Bakliyat", "Tahıl", "Ana Yemek", "Ara Yemek"]
     elif current == "Öğle Yemeği":
-        nxt, cats = "Akşam Yemeği", ["Çorba", "Sebze", "Et", "Salata", "Süt Ürünü"]
+        nxt, cats = "Akşam Yemeği", ["Çorba", "Sebze", "Et", "Salata", "Süt Ürünü", "Ana Yemek"]
     else:
-        nxt, cats = "Yarınki Kahvaltı", ["Kahvaltılık", "Süt Ürünü", "Meyve", "Kuruyemiş"]
+        nxt, cats = "Yarınki Kahvaltı", ["Kahvaltılık", "Süt Ürünü", "Meyve", "Kuruyemiş", "İçecek"]
+        
     st.session_state.meal_state["next_meal_name"] = nxt
     st.session_state.meal_state["next_cats"] = cats
     st.session_state.step += 1
@@ -72,7 +76,7 @@ def restart():
     st.session_state.step = 1
     st.session_state.meal_state["basket"] = []
 
-# --- SAĞLIK SÖZLÜĞÜ (YORUMLAR İÇİN) ---
+# --- SAĞLIK SÖZLÜĞÜ ---
 nutrient_info = {
     "protein": "Kas onarımı ve bağışıklık için temeldir.",
     "fat": "Hücre zarı ve hormon üretimi için gereklidir.",
@@ -131,7 +135,7 @@ c1, c2 = st.columns([1, 8])
 with c1: st.image("https://cdn-icons-png.flaticon.com/512/3075/3075977.png", width=80)
 with c2: 
     st.title("MicroNutri AI Pro 🧬")
-    st.caption("Detaylı Besin Analiz Raporu")
+    st.caption("Detaylı Besin Analiz Raporu ve Akıllı Karar Destek Sistemi")
 
 # ==========================================
 # 🏁 SAYFA 1: PROFİL
@@ -192,7 +196,9 @@ elif st.session_state.step == 2:
                 ratio = grams / 100
                 item_full = row.to_dict()
                 for k in item_full.keys():
-                    if k not in ["name", "category"]: item_full[k] = item_full[k] * ratio
+                    # Metin olan sütunları çarpmamak için filtreliyoruz
+                    if pd.api.types.is_numeric_dtype(type(item_full[k])):
+                        item_full[k] = item_full[k] * ratio
                 temp_basket.append(item_full)
     
     st.session_state.meal_state["basket"] = temp_basket
@@ -205,7 +211,7 @@ elif st.session_state.step == 2:
         else: st.warning("Devam etmek için en az bir yemek seçmelisin.")
 
 # ==========================================
-# 📊 SAYFA 3: DETAYLI RAPOR
+# 📊 SAYFA 3: DETAYLI RAPOR VE ÖNERİ
 # ==========================================
 elif st.session_state.step == 3:
     st.markdown('<div class="step-indicator">Sonuç: Detaylı Beslenme Karnesi</div>', unsafe_allow_html=True)
@@ -222,7 +228,7 @@ elif st.session_state.step == 3:
     tdee = bmr * act_mult
     goal_cal = tdee - 500 if "Ver" in profile["goal"] else tdee + 400 if "Al" in profile["goal"] else tdee
     
-    # HEDEFLER
+    # ÖĞÜN BAŞINA DÜŞEN HEDEFLER (Günlük ihtiyacın 3'te 1'i)
     targets = {
         "calories": goal_cal / 3,
         "protein": (goal_cal * 0.20 / 4) / 3,
@@ -239,22 +245,21 @@ elif st.session_state.step == 3:
     totals = {k: sum(x.get(k, 0) for x in basket) for k in targets.keys()}
 
     # --- SEKMELİ RAPORLAMA ---
-    tab1, tab2, tab3 = st.tabs(["📊 Özet Durum", "📋 Detaylı Karne", "💡 Akıllı Öneri"])
+    tab1, tab2, tab3 = st.tabs(["📊 Özet Durum", "📋 Detaylı Karne", "💡 Akıllı Dengeli Öneri"])
 
     # --- TAB 1: ÖZET ---
     with tab1:
         st.subheader("🔥 Kalori ve Enerji Dengesi")
         rem_cal = targets['calories'] - totals['calories']
         c1, c2, c3 = st.columns(3)
-        with c1: st.markdown(f"<div class='metric-container'><h3>Hedef</h3><h2>{int(targets['calories'])}</h2></div>", unsafe_allow_html=True)
-        with c2: st.markdown(f"<div class='metric-container'><h3>Alınan</h3><h2>{int(totals['calories'])}</h2></div>", unsafe_allow_html=True)
+        with c1: st.markdown(f"<div class='metric-container'><h3>Hedef</h3><h2>{int(targets['calories'])} kcal</h2></div>", unsafe_allow_html=True)
+        with c2: st.markdown(f"<div class='metric-container'><h3>Alınan</h3><h2>{int(totals['calories'])} kcal</h2></div>", unsafe_allow_html=True)
         with c3: 
             lbl = "Açık (Kalan)" if rem_cal > 0 else "Fazlalık"
             color = "#4CAF50" if rem_cal > 0 else "#FF4B4B"
-            st.markdown(f"<div class='metric-container' style='border-left: 5px solid {color}'><h3>{lbl}</h3><h2>{abs(int(rem_cal))}</h2></div>", unsafe_allow_html=True)
+            st.markdown(f"<div class='metric-container' style='border-left: 5px solid {color}'><h3>{lbl}</h3><h2>{abs(int(rem_cal))} kcal</h2></div>", unsafe_allow_html=True)
         
-        st.progress(min(totals['calories'] / targets['calories'], 1.0))
-        st.info("Detaylı besin analizi için yukarıdaki **'Detaylı Karne'** sekmesine tıklayın 👆")
+        st.progress(min(totals['calories'] / (targets['calories'] if targets['calories']>0 else 1), 1.0))
 
     # --- TAB 2: DETAYLI KARNE ---
     with tab2:
@@ -283,39 +288,70 @@ elif st.session_state.step == 3:
             analyze_nutrient("Magnezyum", totals["magnesium_mg"], targets["magnesium_mg"], "mg", "magnesium_mg")
             analyze_nutrient("Çinko", totals["zinc_mg"], targets["zinc_mg"], "mg", "zinc_mg")
 
-    # --- TAB 3: AKILLI ÖNERİ ---
+    # --- TAB 3: AKILLI DENGELİ ÖNERİ ---
     with tab3:
         st.subheader(f"🔮 Gelecek Öğün Planı: {meal_data['next_meal_name']}")
         
-        # En büyük eksiği bul
+        # En büyük eksiği bul (Sadece Vitamin/Mineraller arasından)
         deficiencies = {}
         for k, v in targets.items():
-            if k == "calories": continue
-            if totals[k] < (v * 0.6):
+            if k in ["calories", "protein", "carbs", "fat"]: continue # Makroları öneride atla
+            if totals[k] < (v * 0.6): # Eğer hedefin %60'ından az alındıysa eksik say
                 deficiencies[k] = (v - totals[k]) / v
         
         if deficiencies:
             worst = max(deficiencies, key=deficiencies.get)
             clean_name = worst.replace("_mg", "").replace("_iu", "").upper()
             
-            # Filtrele
-            next_foods = df[df['category'].isin(meal_data['next_cats'])]
-            suggestions = next_foods.sort_values(by=worst, ascending=False).head(3)
+            # --- YENİ DENGELİ MENÜ ALGORİTMASI ---
+            # Eğer CSV dosyasında 'Ogun' ve 'Tur' sütunları varsa bu çalışır.
+            if 'Ogun' in df.columns and 'Tur' in df.columns:
+                next_meal_name = meal_data['next_meal_name']
+                
+                # Sadece ilgili öğüne uygun yemekleri filtrele
+                next_foods = df[df['Ogun'].str.contains(next_meal_name, na=False, case=False)]
+                
+                if next_meal_name == "Yarınki Kahvaltı":
+                    # Kahvaltı Kombinasyonu: Ana Kahvaltılık + Yan Ürün + İçecek
+                    grup1 = next_foods[next_foods['Tur'].str.contains('Ana', na=False, case=False)].sort_values(by=worst, ascending=False).head(1)
+                    grup2 = next_foods[next_foods['Tur'].str.contains('Ara|Yan|Söğüş|Peynir|Zeytin', na=False, case=False)].sort_values(by=worst, ascending=False).head(1)
+                    grup3 = next_foods[next_foods['Tur'].str.contains('İçecek', na=False, case=False)].sort_values(by=worst, ascending=False).head(1)
+                else:
+                    # Öğle/Akşam Kombinasyonu: Çorba/Ara Sıcak + Ana Yemek + Salata/İçecek/Tatlı
+                    grup1 = next_foods[next_foods['Tur'].str.contains('Çorba|Ara', na=False, case=False)].sort_values(by=worst, ascending=False).head(1)
+                    grup2 = next_foods[next_foods['Tur'].str.contains('Ana', na=False, case=False)].sort_values(by=worst, ascending=False).head(1)
+                    grup3 = next_foods[next_foods['Tur'].str.contains('İçecek|Salata|Tatlı|Meze', na=False, case=False)].sort_values(by=worst, ascending=False).head(1)
+                
+                # Grupları birleştir ve boş olanları çıkar
+                suggestions = pd.concat([grup1, grup2, grup3]).dropna(how='all')
+                
+                # Eğer filtreleme sonucu yeterli yemek bulunamazsa eski sisteme düş (Güvenlik)
+                if suggestions.empty:
+                    suggestions = df[df['category'].isin(meal_data['next_cats'])].sort_values(by=worst, ascending=False).head(3)
             
-            st.error(f"Bu öğünde **{clean_name}** alımın çok yetersiz kaldı.")
-            st.info(f"💡 {meal_data['next_meal_name']} öğününde bu açığı kapatmak için öneriler:")
+            # Eski Sistem (CSV güncellenmediyse burası çalışır)
+            else:
+                next_foods = df[df['category'].isin(meal_data['next_cats'])]
+                suggestions = next_foods.sort_values(by=worst, ascending=False).head(3)
+                
+            st.error(f"Bu öğünde **{clean_name}** alımın yetersiz kaldı.")
+            st.info(f"💡 {meal_data['next_meal_name']} için {clean_name} açığını kapatacak Dengeli Menü Önerisi:")
             
             sc1, sc2, sc3 = st.columns(3)
             for idx, (_, row) in enumerate(suggestions.iterrows()):
-                with [sc1, sc2, sc3][idx]:
-                    st.markdown(f"""
-                    <div class="nutrient-card">
-                        <h3>{row['name']}</h3>
-                        <p>{row['category']}</p>
-                        <h2 style="color:#FF4B4B">{row[worst]:.1f}</h2>
-                        <p>{clean_name}</p>
-                    </div>
-                    """, unsafe_allow_html=True)
+                if idx < 3: # Maksimum 3 kart göster
+                    with [sc1, sc2, sc3][idx]:
+                        # CSV'de 'Tur' yoksa 'category' kullan
+                        tur_baslik = row['Tur'] if 'Tur' in row.index and pd.notna(row['Tur']) else row['category']
+                        
+                        st.markdown(f"""
+                        <div class="nutrient-card" style="border-top: 4px solid #FF4B4B;">
+                            <p style="color:#888; font-size:12px; margin-bottom:0; text-transform:uppercase;">{tur_baslik}</p>
+                            <h3 style="margin-top:5px; margin-bottom:15px; font-size:18px;">{row['name']}</h3>
+                            <h2 style="color:#FF4B4B; margin:0;">{row[worst]:.1f}</h2>
+                            <p style="font-size:12px; color:#555; margin-top:0;">{clean_name}</p>
+                        </div>
+                        """, unsafe_allow_html=True)
         else:
             st.balloons()
             st.success("Tebrikler! Besin değerlerin harika. Gelecek öğünde serbestsin!")
