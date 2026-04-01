@@ -276,7 +276,6 @@ elif st.session_state.step == 3:
             analyze_nutrient("Magnezyum", totals["magnesium_mg"], targets["magnesium_mg"], "mg", "magnesium_mg")
             analyze_nutrient("Çinko", totals["zinc_mg"], targets["zinc_mg"], "mg", "zinc_mg")
 
-    # --- TAB 3: GRAMAJ HESAPLAMALI YENİ SİSTEM ---
     with tab3:
         st.subheader(f"🔮 Gelecek Öğün Planı: {meal_data['next_meal_name']}")
         
@@ -295,8 +294,6 @@ elif st.session_state.step == 3:
             sc1, sc2, sc3 = st.columns(3)
             used_foods = [] 
             search_meal = "Kahvaltı" if meal_data['next_meal_name'] == "Yarınki Kahvaltı" else meal_data['next_meal_name']
-            
-            # Bu öğün için yeme hakkımız olan kalori. 3 çeşit yiyeceğimiz için 3'e bölüyoruz.
             target_cal_per_item = targets['calories'] / 3
             
             for idx, (nutrient_key, deficiency_ratio) in enumerate(sorted_deficiencies):
@@ -316,45 +313,24 @@ elif st.session_state.step == 3:
                         best_food = top_candidates.sample(n=1).iloc[0]
                         used_foods.append(best_food['name'])
                         
-                        # --- GRAMAJ HESAPLAMA MANTIĞI ---
                         food_cal_per_100g = best_food['calories']
                         
                         if food_cal_per_100g > 0:
-                            # İhtiyacımız olan kaloriyi doldurmak için kaç gram yemeliyiz?
                             rec_grams = (target_cal_per_item / food_cal_per_100g) * 100
                         else:
-                            # Çay, maden suyu gibi kalorisizler için standart 1 bardak (200ml/gr)
                             rec_grams = 200 
                             
-                        # Gerçekçi porsiyonlara yuvarlama (Örn: 123g değil 120g)
                         rec_grams = round(rec_grams / 10) * 10
-                        
-                        # Absürt gramajları engelleme (Max 350g, Min 20g)
                         if rec_grams > 350: rec_grams = 350
                         if rec_grams < 20: rec_grams = 20
                         
-                        # Yeni hesaplanan gramaja göre yemeğin kalori ve vitaminini güncelleme
                         final_cal = (food_cal_per_100g / 100) * rec_grams
                         final_nut = (best_food[nutrient_key] / 100) * rec_grams
-                        
                         tur_baslik = best_food['Tur'] if 'Tur' in best_food.index and pd.notna(best_food['Tur']) else best_food['category']
                         
-                        st.markdown(f"""
-                        <div class="nutrient-card">
-                            <p style="color:#888; font-size:12px; margin-bottom:0; text-transform:uppercase;">{tur_baslik}</p>
-                            <h3 style="margin-top:5px; margin-bottom:5px; font-size:20px;">{best_food['name']}</h3>
-                            
-                            <div class="gram-badge">⚖️ Tüketim Önerisi: {int(rec_grams)} gr</div>
-                            <br>
-                            <span style="background-color:#ffebeb; color:#FF4B4B; padding:4px 10px; border-radius:10px; font-size:13px; font-weight:bold;">🔥 {int(final_cal)} kcal</span>
-                            
-                            <div style="background-color:#f8f9fa; padding:10px; border-radius:8px; margin-top:15px; border: 1px solid #eee;">
-                                <p style="font-size:12px; color:#555; margin-bottom:0;">Bu porsiyonla kazanılan:</p>
-                                <h2 style="color:#00b894; margin:5px 0;">{clean_name}</h2>
-                                <p style="font-size:14px; color:#333; margin-top:5px;"><b>+{final_nut:.1f}</b> eklenecek</p>
-                            </div>
-                        </div>
-                        """, unsafe_allow_html=True)
+                        # Burada html tek parça ve boşluksuz hale getirildi
+                        html_content = f'<div class="nutrient-card"><p style="color:#888; font-size:12px; margin-bottom:0; text-transform:uppercase;">{tur_baslik}</p><h3 style="margin-top:5px; margin-bottom:5px; font-size:20px;">{best_food["name"]}</h3><div class="gram-badge">⚖️ Tüketim Önerisi: {int(rec_grams)} gr</div><br><span style="background-color:#ffebeb; color:#FF4B4B; padding:4px 10px; border-radius:10px; font-size:13px; font-weight:bold;">🔥 {int(final_cal)} kcal</span><div style="background-color:#f8f9fa; padding:10px; border-radius:8px; margin-top:15px; border: 1px solid #eee;"><p style="font-size:12px; color:#555; margin-bottom:0;">Bu porsiyonla kazanılan:</p><h2 style="color:#00b894; margin:5px 0;">{clean_name}</h2><p style="font-size:14px; color:#333; margin-top:5px;"><b>+{final_nut:.1f}</b> eklenecek</p></div></div>'
+                        st.markdown(html_content, unsafe_allow_html=True)
                     else:
                         st.warning(f"{clean_name} için uygun yemek bulunamadı.")
         else:
