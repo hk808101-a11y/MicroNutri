@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import random # Çeşitlilik için eklendi
+import random
 
 # --- SAYFA AYARLARI ---
 st.set_page_config(page_title="MicroNutri AI Pro", page_icon="🧬", layout="wide")
@@ -16,7 +16,8 @@ st.markdown("""
     .nutrient-low { background-color: #fff5f5; border-left: 5px solid #ff7675; }
     .nutrient-high { background-color: #fff0db; border-left: 5px solid #fdcb6e; }
     .step-indicator { font-size: 1.2rem; font-weight: bold; color: #555; text-align: center; padding: 10px; background-color: #eef; border-radius: 8px; margin-bottom: 20px; }
-    .nutrient-card { background-color: #ffffff; padding: 15px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; height: 100%; border-top: 4px solid #FF4B4B;}
+    .nutrient-card { background-color: #ffffff; padding: 20px; border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.05); text-align: center; height: 100%; border-top: 5px solid #FF4B4B;}
+    .gram-badge { background-color: #007BFF; color: white; padding: 5px 15px; border-radius: 20px; font-size: 16px; font-weight: bold; display: inline-block; margin: 10px 0; box-shadow: 0 4px 6px rgba(0,123,255,0.2);}
 </style>
 """, unsafe_allow_html=True)
 
@@ -145,7 +146,7 @@ if st.session_state.step == 1:
     st.button("Kaydet ve İlerle 👉", on_click=save_profile_and_next)
 
 # ==========================================
-# 🥗 SAYFA 2: YEMEK SEÇİMİ (YENİ KATEGORİLİ SİSTEM)
+# 🥗 SAYFA 2: YEMEK SEÇİMİ
 # ==========================================
 elif st.session_state.step == 2:
     st.markdown('<div class="step-indicator">Adım 2/3: Ne Yiyorsun?</div>', unsafe_allow_html=True)
@@ -275,6 +276,7 @@ elif st.session_state.step == 3:
             analyze_nutrient("Magnezyum", totals["magnesium_mg"], targets["magnesium_mg"], "mg", "magnesium_mg")
             analyze_nutrient("Çinko", totals["zinc_mg"], targets["zinc_mg"], "mg", "zinc_mg")
 
+    # --- TAB 3: GRAMAJ HESAPLAMALI YENİ SİSTEM ---
     with tab3:
         st.subheader(f"🔮 Gelecek Öğün Planı: {meal_data['next_meal_name']}")
         
@@ -288,12 +290,14 @@ elif st.session_state.step == 3:
             sorted_deficiencies = sorted(deficiencies.items(), key=lambda x: x[1], reverse=True)[:3]
             
             st.error("Bu süreçte bazı mineral ve vitamin alımların yetersiz kaldı.")
-            st.info(f"💡 {meal_data['next_meal_name']} öğününde bu eksiklikleri kalori hedefine uygun şekilde kapatacak Diyetisyen Önerisi:")
+            st.info(f"💡 {meal_data['next_meal_name']} öğününde hedeflerine tam ulaşabilmen için gramajlı Diyetisyen Önerisi:")
             
             sc1, sc2, sc3 = st.columns(3)
             used_foods = [] 
             search_meal = "Kahvaltı" if meal_data['next_meal_name'] == "Yarınki Kahvaltı" else meal_data['next_meal_name']
-            max_cal_per_item = (targets['calories'] / 3) * 1.5 
+            
+            # Bu öğün için yeme hakkımız olan kalori. 3 çeşit yiyeceğimiz için 3'e bölüyoruz.
+            target_cal_per_item = targets['calories'] / 3
             
             for idx, (nutrient_key, deficiency_ratio) in enumerate(sorted_deficiencies):
                 clean_name = nutrient_key.replace("_mg", "").replace("_iu", "").upper()
@@ -307,31 +311,47 @@ elif st.session_state.step == 3:
                     available_foods = next_foods[~next_foods['name'].isin(used_foods)]
                     
                     if not available_foods.empty:
-                        calorie_filtered = available_foods[available_foods['calories'] <= max_cal_per_item].copy()
-                        if calorie_filtered.empty:
-                            calorie_filtered = available_foods.copy()
-
-                        calorie_filtered['fiyat_performans'] = calorie_filtered[nutrient_key] / calorie_filtered['calories'].replace(0, 1)
-                        
-                        # --- ÇEŞİTLİLİK (RANDOMIZATION) BURADA DEVREYE GİRİYOR ---
-                        # Sadece 1. sıradakini değil, en iyi 5 alternatifi bul
-                        top_candidates = calorie_filtered.sort_values(by='fiyat_performans', ascending=False).head(5)
-                        
-                        # Bu 5 mükemmel yemeğin içinden rastgele bir tane seç
+                        available_foods['fiyat_performans'] = available_foods[nutrient_key] / available_foods['calories'].replace(0, 1)
+                        top_candidates = available_foods.sort_values(by='fiyat_performans', ascending=False).head(5)
                         best_food = top_candidates.sample(n=1).iloc[0]
-                        
                         used_foods.append(best_food['name'])
+                        
+                        # --- GRAMAJ HESAPLAMA MANTIĞI ---
+                        food_cal_per_100g = best_food['calories']
+                        
+                        if food_cal_per_100g > 0:
+                            # İhtiyacımız olan kaloriyi doldurmak için kaç gram yemeliyiz?
+                            rec_grams = (target_cal_per_item / food_cal_per_100g) * 100
+                        else:
+                            # Çay, maden suyu gibi kalorisizler için standart 1 bardak (200ml/gr)
+                            rec_grams = 200 
+                            
+                        # Gerçekçi porsiyonlara yuvarlama (Örn: 123g değil 120g)
+                        rec_grams = round(rec_grams / 10) * 10
+                        
+                        # Absürt gramajları engelleme (Max 350g, Min 20g)
+                        if rec_grams > 350: rec_grams = 350
+                        if rec_grams < 20: rec_grams = 20
+                        
+                        # Yeni hesaplanan gramaja göre yemeğin kalori ve vitaminini güncelleme
+                        final_cal = (food_cal_per_100g / 100) * rec_grams
+                        final_nut = (best_food[nutrient_key] / 100) * rec_grams
+                        
                         tur_baslik = best_food['Tur'] if 'Tur' in best_food.index and pd.notna(best_food['Tur']) else best_food['category']
                         
                         st.markdown(f"""
                         <div class="nutrient-card">
                             <p style="color:#888; font-size:12px; margin-bottom:0; text-transform:uppercase;">{tur_baslik}</p>
-                            <h3 style="margin-top:5px; margin-bottom:5px; font-size:18px;">{best_food['name']}</h3>
-                            <span style="background-color:#ffebeb; color:#FF4B4B; padding:3px 8px; border-radius:10px; font-size:12px; font-weight:bold;">🔥 {int(best_food['calories'])} kcal</span>
-                            <div style="background-color:#f8f9fa; padding:10px; border-radius:8px; margin-top:15px;">
-                                <p style="font-size:12px; color:#555; margin-bottom:0;">Bunu tamamlar:</p>
-                                <h2 style="color:#00b894; margin:0;">{clean_name}</h2>
-                                <p style="font-size:14px; color:#333; margin-top:5px;"><b>+{best_food[nutrient_key]:.1f}</b> eklenecek</p>
+                            <h3 style="margin-top:5px; margin-bottom:5px; font-size:20px;">{best_food['name']}</h3>
+                            
+                            <div class="gram-badge">⚖️ Tüketim Önerisi: {int(rec_grams)} gr</div>
+                            <br>
+                            <span style="background-color:#ffebeb; color:#FF4B4B; padding:4px 10px; border-radius:10px; font-size:13px; font-weight:bold;">🔥 {int(final_cal)} kcal</span>
+                            
+                            <div style="background-color:#f8f9fa; padding:10px; border-radius:8px; margin-top:15px; border: 1px solid #eee;">
+                                <p style="font-size:12px; color:#555; margin-bottom:0;">Bu porsiyonla kazanılan:</p>
+                                <h2 style="color:#00b894; margin:5px 0;">{clean_name}</h2>
+                                <p style="font-size:14px; color:#333; margin-top:5px;"><b>+{final_nut:.1f}</b> eklenecek</p>
                             </div>
                         </div>
                         """, unsafe_allow_html=True)
