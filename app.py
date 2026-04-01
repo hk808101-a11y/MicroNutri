@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import random # Çeşitlilik için eklendi
 
 # --- SAYFA AYARLARI ---
 st.set_page_config(page_title="MicroNutri AI Pro", page_icon="🧬", layout="wide")
@@ -160,8 +161,6 @@ elif st.session_state.step == 2:
         st.caption("Aradığın yemeği bulmak için ilgili kategoriye tıkla:")
         
         all_selected = []
-        
-        # Yemekleri daha şık görünmesi için 4 ana gruba ayırdık
         groups = {
             "🍳 Kahvaltı & Süt": ["Kahvaltılık", "Süt Ürünü"],
             "🍲 Yemekler": ["Çorba", "Et", "Sebze", "Bakliyat"],
@@ -169,16 +168,13 @@ elif st.session_state.step == 2:
             "🍎 Tatlı & Atıştırmalık": ["Meyve", "Kuruyemiş", "Tatlı", "İçecek", "FastFood"]
         }
         
-        # Sekmeleri (Tabs) oluşturuyoruz
         category_tabs = st.tabs(list(groups.keys()))
         
         for i, (grp_name, cats) in enumerate(groups.items()):
             with category_tabs[i]:
                 for cat in cats:
-                    # CSV'deki kategorilere göre yemekleri filtrele
                     cat_foods = df[df['category'] == cat]['name'].tolist()
                     if cat_foods:
-                        # Her alt kategori için ayrı bir arama kutusu
                         sel = st.multiselect(f"👉 {cat} Ekle:", cat_foods, key=f"sel_{cat}")
                         all_selected.extend(sel)
                         
@@ -297,7 +293,6 @@ elif st.session_state.step == 3:
             sc1, sc2, sc3 = st.columns(3)
             used_foods = [] 
             search_meal = "Kahvaltı" if meal_data['next_meal_name'] == "Yarınki Kahvaltı" else meal_data['next_meal_name']
-            
             max_cal_per_item = (targets['calories'] / 3) * 1.5 
             
             for idx, (nutrient_key, deficiency_ratio) in enumerate(sorted_deficiencies):
@@ -317,7 +312,13 @@ elif st.session_state.step == 3:
                             calorie_filtered = available_foods.copy()
 
                         calorie_filtered['fiyat_performans'] = calorie_filtered[nutrient_key] / calorie_filtered['calories'].replace(0, 1)
-                        best_food = calorie_filtered.sort_values(by='fiyat_performans', ascending=False).iloc[0]
+                        
+                        # --- ÇEŞİTLİLİK (RANDOMIZATION) BURADA DEVREYE GİRİYOR ---
+                        # Sadece 1. sıradakini değil, en iyi 5 alternatifi bul
+                        top_candidates = calorie_filtered.sort_values(by='fiyat_performans', ascending=False).head(5)
+                        
+                        # Bu 5 mükemmel yemeğin içinden rastgele bir tane seç
+                        best_food = top_candidates.sample(n=1).iloc[0]
                         
                         used_foods.append(best_food['name'])
                         tur_baslik = best_food['Tur'] if 'Tur' in best_food.index and pd.notna(best_food['Tur']) else best_food['category']
