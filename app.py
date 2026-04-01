@@ -296,6 +296,9 @@ elif st.session_state.step == 3:
             search_meal = "Kahvaltı" if meal_data['next_meal_name'] == "Yarınki Kahvaltı" else meal_data['next_meal_name']
             target_cal_per_item = targets['calories'] / 3
             
+            # --- BONUS VİTAMİN BULUCU LİSTE ---
+            all_micros = ["vit_a_iu", "vit_b_mg", "vit_c_mg", "vit_d_iu", "vit_e_mg", "calcium_mg", "iron_mg", "magnesium_mg", "zinc_mg"]
+            
             for idx, (nutrient_key, deficiency_ratio) in enumerate(sorted_deficiencies):
                 clean_name = nutrient_key.replace("_mg", "").replace("_iu", "").upper()
                 
@@ -328,8 +331,24 @@ elif st.session_state.step == 3:
                         final_nut = (best_food[nutrient_key] / 100) * rec_grams
                         tur_baslik = best_food['Tur'] if 'Tur' in best_food.index and pd.notna(best_food['Tur']) else best_food['category']
                         
-                        # Burada html tek parça ve boşluksuz hale getirildi
-                        html_content = f'<div class="nutrient-card"><p style="color:#888; font-size:12px; margin-bottom:0; text-transform:uppercase;">{tur_baslik}</p><h3 style="margin-top:5px; margin-bottom:5px; font-size:20px;">{best_food["name"]}</h3><div class="gram-badge">⚖️ Tüketim Önerisi: {int(rec_grams)} gr</div><br><span style="background-color:#ffebeb; color:#FF4B4B; padding:4px 10px; border-radius:10px; font-size:13px; font-weight:bold;">🔥 {int(final_cal)} kcal</span><div style="background-color:#f8f9fa; padding:10px; border-radius:8px; margin-top:15px; border: 1px solid #eee;"><p style="font-size:12px; color:#555; margin-bottom:0;">Bu porsiyonla kazanılan:</p><h2 style="color:#00b894; margin:5px 0;">{clean_name}</h2><p style="font-size:14px; color:#333; margin-top:5px;"><b>+{final_nut:.1f}</b> eklenecek</p></div></div>'
+                        # --- EKSTRA KAZANÇ (BONUS) HESAPLAMA ---
+                        bonus_list = []
+                        for m in all_micros:
+                            if m != nutrient_key and best_food[m] > 0:
+                                m_val = (best_food[m] / 100) * rec_grams
+                                if m_val >= 0.5: # Sadece 0.5'ten büyük kayda değer değerleri al
+                                    clean_m = m.replace('_mg', '').replace('_iu', '').upper()
+                                    bonus_list.append(f"{clean_m} (+{m_val:.1f})")
+                        
+                        bonus_html = ""
+                        if bonus_list:
+                            # Çok kalabalık olmasın diye sadece en yüksek 3 ekstra vitamini gösterelim
+                            bonus_str = ", ".join(bonus_list[:3])
+                            bonus_html = f"<div style='margin-top:10px; font-size:11px; color:#666; border-top:1px dashed #ccc; padding-top:8px;'><b>🎁 Ekstra Kazanç:</b> {bonus_str}</div>"
+                        
+                        # HTML İÇERİĞİ
+                        html_content = f'<div class="nutrient-card"><p style="color:#888; font-size:12px; margin-bottom:0; text-transform:uppercase;">{tur_baslik}</p><h3 style="margin-top:5px; margin-bottom:5px; font-size:20px;">{best_food["name"]}</h3><div class="gram-badge">⚖️ Tüketim Önerisi: {int(rec_grams)} gr</div><br><span style="background-color:#ffebeb; color:#FF4B4B; padding:4px 10px; border-radius:10px; font-size:13px; font-weight:bold;">🔥 {int(final_cal)} kcal</span><div style="background-color:#f8f9fa; padding:10px; border-radius:8px; margin-top:15px; border: 1px solid #eee;"><p style="font-size:12px; color:#555; margin-bottom:0;">Bu porsiyonla kazanılan:</p><h2 style="color:#00b894; margin:5px 0;">{clean_name}</h2><p style="font-size:14px; color:#333; margin-top:5px;"><b>+{final_nut:.1f}</b> eklenecek</p>{bonus_html}</div></div>'
+                        
                         st.markdown(html_content, unsafe_allow_html=True)
                     else:
                         st.warning(f"{clean_name} için uygun yemek bulunamadı.")
