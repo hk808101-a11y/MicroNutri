@@ -146,7 +146,7 @@ if st.session_state.step == 1:
     st.button("Kaydet ve İlerle 👉", on_click=save_profile_and_next)
 
 # ==========================================
-# 🥗 SAYFA 2: YEMEK SEÇİMİ
+# 🥗 SAYFA 2: YEMEK SEÇİMİ (ANLIK KALORİ GÖSTERGELİ)
 # ==========================================
 elif st.session_state.step == 2:
     st.markdown('<div class="step-indicator">Adım 2/3: Ne Yiyorsun?</div>', unsafe_allow_html=True)
@@ -186,16 +186,23 @@ elif st.session_state.step == 2:
     
     if selected:
         st.markdown("---")
-        st.info("👇 Seçtiğin yemeklerin gramajlarını ayarlamayı unutma!")
+        st.info("👇 Gramajları Ayarla! Porsiyon rehberi: 1 Dilim Peynir/Ekmek ~30gr, 1 Kase Çorba ~250gr, 1 Tabak Yemek ~200gr, 1 Bardak ~200ml")
         cols = st.columns(3)
         for i, food_name in enumerate(selected):
             row = df[df['name'] == food_name].iloc[0]
             with cols[i % 3]:
-                grams = st.number_input(f"{food_name} (gr)", 10, 1000, 100, 10, key=f"gram_{food_name}")
+                # Kullanıcı gramaj girdikçe kalori anında hesaplanıp ekranda görünecek!
+                grams = st.number_input(f"⚖️ {food_name} (gr/ml)", 10, 2000, 100, 10, key=f"gram_{food_name}")
                 ratio = grams / 100
+                calc_cal = int(row['calories'] * ratio)
+                
+                # Canlı Kalori Etiketi
+                st.markdown(f"<span style='color:#FF4B4B; font-size:14px; font-weight:bold; background-color:#ffebeb; padding:2px 8px; border-radius:5px;'>🔥 Hesaplanan: {calc_cal} kcal</span><br><br>", unsafe_allow_html=True)
+                
                 item_full = row.to_dict()
                 for k in item_full.keys():
-                    if pd.api.types.is_numeric_dtype(type(item_full[k])):
+                    # Tip kontrolünü daha güvenli hale getirdik
+                    if isinstance(item_full[k], (int, float)):
                         item_full[k] = item_full[k] * ratio
                 temp_basket.append(item_full)
                 
@@ -326,12 +333,10 @@ elif st.session_state.step == 3:
         all_micros = ["vit_a_iu", "vit_b_mg", "vit_c_mg", "vit_d_iu", "vit_e_mg", "calcium_mg", "iron_mg", "magnesium_mg", "zinc_mg"]
         
         if 'Ogun' in df.columns:
-            next_foods = df[df['Ogun'].str.contains(search_meal, na=False, case=False)]
+            next_foods = df[df['Ogun'].str.contains(search_meal, na=False)]
         else:
             next_foods = df[df['category'].isin(meal_data['next_cats'])]
             
-        # HATA BURADAYDI: Önceden sadece "category" sütununa bakıyorduk. Kefir'in kategorisi "Süt Ürünü" olduğu için onu katı gıda sayıyordu!
-        # DÜZELTME: Artık direkt "Tur" sütununa bakıp, "İçecek" yazanları kesin bir şekilde ayırıyoruz.
         if 'Tur' in next_foods.columns:
             solids_df = next_foods[next_foods['Tur'] != 'İçecek']
             drinks_df = next_foods[next_foods['Tur'] == 'İçecek']
@@ -372,14 +377,12 @@ elif st.session_state.step == 3:
             html_code = f'''<div class="nutrient-card"><p style="color:#888; font-size:11px; margin-bottom:0; text-transform:uppercase;">{tur_baslik}</p><h3 style="margin-top:5px; margin-bottom:5px; font-size:16px;">{best_food["name"]}</h3><div class="gram-badge">⚖️ Porsiyon: {int(rec_grams)} gr/ml</div><br><span style="background-color:#ffebeb; color:#FF4B4B; padding:4px 8px; border-radius:10px; font-size:12px; font-weight:bold;">🔥 {int(final_cal)} kcal</span><div style="background-color:#f8f9fa; padding:10px; border-radius:8px; margin-top:15px; border: 1px solid #eee;"><p style="font-size:11px; color:#555; margin-bottom:0;">Kazanılan:</p><h2 style="color:#00b894; margin:5px 0; font-size:18px;">{clean_name}</h2><p style="font-size:13px; color:#333; margin-top:5px;"><b>{nut_text}</b></p>{bonus_html}</div></div>'''
             return html_code
 
-        # İKİ FARKLI SEÇENEK
         for option in [1, 2]:
             st.markdown(f"<h3 style='color:#FF4B4B; margin-top:20px; text-align:center;'>🍱 Menü Seçeneği {option}</h3>", unsafe_allow_html=True)
             cols = st.columns(4)
             
-            # --- 3 KATI GIDA KONTROLÜ ---
             solid_count = 0
-            attempts = 0 # Güvenlik kilidi: Sistem aynı yemeği bulamazsa donmasın diye.
+            attempts = 0 
             while solid_count < 3 and attempts < 15:
                 attempts += 1
                 target_nut = def_keys[solid_count % len(def_keys)]
@@ -395,7 +398,6 @@ elif st.session_state.step == 3:
                         st.markdown(create_card_html(best_solid, target_nut, clean_name), unsafe_allow_html=True)
                     solid_count += 1
 
-            # --- ZORUNLU 1 İÇECEK KONTROLÜ ---
             with cols[3]:
                 best_drink = None
                 drink_nut_name = "HİDRASYON"
