@@ -16,8 +16,8 @@ st.markdown("""
     .nutrient-low { background-color: #fff5f5; border-left: 5px solid #ff7675; }
     .nutrient-high { background-color: #fff0db; border-left: 5px solid #fdcb6e; }
     .step-indicator { font-size: 1.2rem; font-weight: bold; color: #555; text-align: center; padding: 10px; background-color: #eef; border-radius: 8px; margin-bottom: 20px; }
-    .nutrient-card { background-color: #ffffff; padding: 20px; border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.05); text-align: center; height: 100%; border-top: 5px solid #FF4B4B;}
-    .gram-badge { background-color: #007BFF; color: white; padding: 5px 15px; border-radius: 20px; font-size: 16px; font-weight: bold; display: inline-block; margin: 10px 0; box-shadow: 0 4px 6px rgba(0,123,255,0.2);}
+    .nutrient-card { background-color: #ffffff; padding: 15px; border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.05); text-align: center; height: 100%; border-top: 5px solid #FF4B4B;}
+    .gram-badge { background-color: #007BFF; color: white; padding: 5px 12px; border-radius: 20px; font-size: 14px; font-weight: bold; display: inline-block; margin: 10px 0; box-shadow: 0 4px 6px rgba(0,123,255,0.2);}
 </style>
 """, unsafe_allow_html=True)
 
@@ -239,30 +239,23 @@ elif st.session_state.step == 3:
     basket = meal_data["basket"]
     totals = {k: sum(x.get(k, 0) for x in basket) for k in targets.keys()}
 
-    # --- OYUNLAŞTIRMA: SAĞLIK SKORU HESAPLAMA ---
+    # --- OYUNLAŞTIRMA ---
     score_sum = 0
     num_metrics = len(targets)
     for k, v in targets.items():
         if v > 0:
             ratio = totals[k] / v
-            # Kalori, karbonhidrat ve yağ çok fazla aşılırsa puan kırma mantığı
             if k in ['calories', 'fat', 'carbs']:
-                if ratio <= 1.15:
-                    score_sum += min(ratio, 1.0)
-                else:
-                    score_sum += max(1.0 - (ratio - 1.15), 0)
+                if ratio <= 1.15: score_sum += min(ratio, 1.0)
+                else: score_sum += max(1.0 - (ratio - 1.15), 0)
             else:
                 score_sum += min(ratio, 1.0)
                 
     final_score = int((score_sum / num_metrics) * 100)
     
-    # Skora göre renk ve mesaj belirleme
-    if final_score >= 80:
-        s_color, s_msg, s_icon = "#00b894", "Harika gidiyorsun! Hedeflerine çok yakınsın, bu düzeni koru.", "🌟"
-    elif final_score >= 50:
-        s_color, s_msg, s_icon = "#fdcb6e", "İdare eder. Bazı eksiklerini sonraki öğünde kapatmalısın.", "⚖️"
-    else:
-        s_color, s_msg, s_icon = "#ff7675", "Kritik seviye! Seçtiğin menü hedeflerinin çok uzağında kaldı.", "⚠️"
+    if final_score >= 80: s_color, s_msg, s_icon = "#00b894", "Harika gidiyorsun! Hedeflerine çok yakınsın.", "🌟"
+    elif final_score >= 50: s_color, s_msg, s_icon = "#fdcb6e", "İdare eder. Eksiklerini sonraki öğünde kapatmalısın.", "⚖️"
+    else: s_color, s_msg, s_icon = "#ff7675", "Kritik seviye! Seçtiğin menü hedeflerinin uzağında kaldı.", "⚠️"
 
     st.markdown(f"""
     <div style="background-color: {s_color}15; border: 3px solid {s_color}; border-radius: 15px; padding: 25px; text-align: center; margin-bottom: 30px;">
@@ -272,7 +265,7 @@ elif st.session_state.step == 3:
     </div>
     """, unsafe_allow_html=True)
 
-    tab1, tab2, tab3 = st.tabs(["📊 Özet Durum", "📋 Detaylı Karne", "💡 Akıllı Diyetisyen Önerisi"])
+    tab1, tab2, tab3 = st.tabs(["📊 Özet Durum", "📋 Detaylı Karne", "💡 Akıllı Alternatifli Fiks Menü"])
 
     with tab1:
         st.subheader("🔥 Kalori ve Enerji Dengesi")
@@ -319,67 +312,111 @@ elif st.session_state.step == 3:
                 deficiencies[k] = (v - totals[k]) / v
         
         if deficiencies:
-            sorted_deficiencies = sorted(deficiencies.items(), key=lambda x: x[1], reverse=True)[:3]
+            sorted_deficiencies = sorted(deficiencies.items(), key=lambda x: x[1], reverse=True)
             
             st.error("Bu süreçte bazı mineral ve vitamin alımların yetersiz kaldı.")
-            st.info(f"💡 {meal_data['next_meal_name']} öğününde hedeflerine tam ulaşabilmen için gramajlı Diyetisyen Önerisi:")
+            st.info("💡 Hedeflerine tam ulaşabilmen için sana 2 farklı Tam Menü (3 Yiyecek + 1 İçecek) alternatifi hazırladım. Dilediğini seç!")
             
-            sc1, sc2, sc3 = st.columns(3)
             used_foods = [] 
             search_meal = "Kahvaltı" if meal_data['next_meal_name'] == "Yarınki Kahvaltı" else meal_data['next_meal_name']
-            target_cal_per_item = targets['calories'] / 3
             
+            target_cal_per_item = targets['calories'] / 4
             all_micros = ["vit_a_iu", "vit_b_mg", "vit_c_mg", "vit_d_iu", "vit_e_mg", "calcium_mg", "iron_mg", "magnesium_mg", "zinc_mg"]
             
-            for idx, (nutrient_key, deficiency_ratio) in enumerate(sorted_deficiencies):
-                clean_name = nutrient_key.replace("_mg", "").replace("_iu", "").upper()
+            if 'Ogun' in df.columns:
+                next_foods = df[df['Ogun'].str.contains(search_meal, na=False, case=False)]
+            else:
+                next_foods = df[df['category'].isin(meal_data['next_cats'])]
                 
-                with [sc1, sc2, sc3][idx]:
-                    if 'Ogun' in df.columns:
-                        next_foods = df[df['Ogun'].str.contains(search_meal, na=False, case=False)]
-                    else:
-                        next_foods = df[df['category'].isin(meal_data['next_cats'])]
+            solids_df = next_foods[next_foods['category'] != 'İçecek']
+            drinks_df = next_foods[next_foods['category'] == 'İçecek']
+
+            # HTML Kart Oluşturucu Fonksiyon
+            def create_card_html(best_food, nutrient_key, clean_name):
+                food_cal_100g = best_food['calories']
+                if food_cal_100g > 0: rec_grams = (target_cal_per_item / food_cal_100g) * 100
+                else: rec_grams = 200 
                     
-                    available_foods = next_foods[~next_foods['name'].isin(used_foods)]
+                rec_grams = round(rec_grams / 10) * 10
+                if rec_grams > 350: rec_grams = 350
+                if rec_grams < 20: rec_grams = 20
+                
+                final_cal = (food_cal_100g / 100) * rec_grams
+                
+                if nutrient_key in best_food and best_food[nutrient_key] > 0:
+                    final_nut = (best_food[nutrient_key] / 100) * rec_grams
+                    nut_text = f"+{final_nut:.1f} eklenecek"
+                else:
+                    nut_text = "Su dengesi sağlanacak"
                     
-                    if not available_foods.empty:
-                        available_foods['fiyat_performans'] = available_foods[nutrient_key] / available_foods['calories'].replace(0, 1)
-                        top_candidates = available_foods.sort_values(by='fiyat_performans', ascending=False).head(5)
-                        best_food = top_candidates.sample(n=1).iloc[0]
-                        used_foods.append(best_food['name'])
+                tur_baslik = best_food['Tur'] if 'Tur' in best_food.index and pd.notna(best_food['Tur']) else best_food['category']
+                
+                bonus_list = []
+                for m in all_micros:
+                    if m != nutrient_key and m in best_food and best_food[m] > 0:
+                        m_val = (best_food[m] / 100) * rec_grams
+                        if m_val >= 0.5: 
+                            bonus_list.append(f"{m.replace('_mg', '').replace('_iu', '').upper()} (+{m_val:.1f})")
+                
+                bonus_html = ""
+                if bonus_list:
+                    bonus_html = f"<div style='margin-top:10px; font-size:10px; color:#666; border-top:1px dashed #ccc; padding-top:8px;'><b>🎁 Ekstra:</b> {', '.join(bonus_list[:3])}</div>"
+                
+                html_code = f'''<div class="nutrient-card"><p style="color:#888; font-size:11px; margin-bottom:0; text-transform:uppercase;">{tur_baslik}</p><h3 style="margin-top:5px; margin-bottom:5px; font-size:16px;">{best_food["name"]}</h3><div class="gram-badge">⚖️ Porsiyon: {int(rec_grams)} gr/ml</div><br><span style="background-color:#ffebeb; color:#FF4B4B; padding:4px 8px; border-radius:10px; font-size:12px; font-weight:bold;">🔥 {int(final_cal)} kcal</span><div style="background-color:#f8f9fa; padding:10px; border-radius:8px; margin-top:15px; border: 1px solid #eee;"><p style="font-size:11px; color:#555; margin-bottom:0;">Kazanılan:</p><h2 style="color:#00b894; margin:5px 0; font-size:18px;">{clean_name}</h2><p style="font-size:13px; color:#333; margin-top:5px;"><b>{nut_text}</b></p>{bonus_html}</div></div>'''
+                return html_code
+
+            # İKİ FARKLI SEÇENEK (DÖNGÜSÜ)
+            for option in [1, 2]:
+                st.markdown(f"<h3 style='color:#FF4B4B; margin-top:20px; text-align:center;'>🍱 Menü Seçeneği {option}</h3>", unsafe_allow_html=True)
+                cols = st.columns(4)
+                
+                # İlk 3 Kolon: Yiyecekler
+                solid_idx = 0
+                for nutrient_key, def_ratio in sorted_deficiencies:
+                    if solid_idx >= 3: break
+                    clean_name = nutrient_key.replace("_mg", "").replace("_iu", "").upper()
+                    
+                    avail_solids = solids_df[~solids_df['name'].isin(used_foods)].copy()
+                    if not avail_solids.empty:
+                        avail_solids['fp'] = avail_solids[nutrient_key] / avail_solids['calories'].replace(0, 1)
+                        best_solid = avail_solids.sort_values(by='fp', ascending=False).head(4).sample(n=1).iloc[0]
+                        used_foods.append(best_solid['name']) # İkinci menüde bir daha çıkmaması için listeye ekle
                         
-                        food_cal_per_100g = best_food['calories']
+                        with cols[solid_idx]:
+                            st.markdown(create_card_html(best_solid, nutrient_key, clean_name), unsafe_allow_html=True)
+                    solid_idx += 1
+
+                # Son Kolon: İçecek
+                with cols[3]:
+                    best_drink = None
+                    drink_nut_name = "FERAHLIK"
+                    drink_nut_key = "calories"
+                    
+                    for nutrient_key, def_ratio in sorted_deficiencies:
+                        avail_drinks = drinks_df[~drinks_df['name'].isin(used_foods)].copy()
+                        if not avail_drinks.empty:
+                            avail_drinks['fp'] = avail_drinks[nutrient_key] / avail_drinks['calories'].replace(0, 1)
+                            helpful_drinks = avail_drinks[avail_drinks[nutrient_key] > 0]
+                            if not helpful_drinks.empty:
+                                best_drink = helpful_drinks.sort_values(by='fp', ascending=False).head(3).sample(n=1).iloc[0]
+                                drink_nut_name = nutrient_key.replace("_mg", "").replace("_iu", "").upper()
+                                drink_nut_key = nutrient_key
+                                break
+                    
+                    if best_drink is None and not drinks_df.empty:
+                        avail_drinks_fallback = drinks_df[~drinks_df['name'].isin(used_foods)]
+                        if not avail_drinks_fallback.empty:
+                            best_drink = avail_drinks_fallback.sample(n=1).iloc[0]
+                        drink_nut_name = "HİDRASYON"
                         
-                        if food_cal_per_100g > 0:
-                            rec_grams = (target_cal_per_item / food_cal_per_100g) * 100
-                        else:
-                            rec_grams = 200 
-                            
-                        rec_grams = round(rec_grams / 10) * 10
-                        if rec_grams > 350: rec_grams = 350
-                        if rec_grams < 20: rec_grams = 20
-                        
-                        final_cal = (food_cal_per_100g / 100) * rec_grams
-                        final_nut = (best_food[nutrient_key] / 100) * rec_grams
-                        tur_baslik = best_food['Tur'] if 'Tur' in best_food.index and pd.notna(best_food['Tur']) else best_food['category']
-                        
-                        bonus_list = []
-                        for m in all_micros:
-                            if m != nutrient_key and best_food[m] > 0:
-                                m_val = (best_food[m] / 100) * rec_grams
-                                if m_val >= 0.5: 
-                                    clean_m = m.replace('_mg', '').replace('_iu', '').upper()
-                                    bonus_list.append(f"{clean_m} (+{m_val:.1f})")
-                        
-                        bonus_html = ""
-                        if bonus_list:
-                            bonus_str = ", ".join(bonus_list[:3])
-                            bonus_html = f"<div style='margin-top:10px; font-size:11px; color:#666; border-top:1px dashed #ccc; padding-top:8px;'><b>🎁 Ekstra Kazanç:</b> {bonus_str}</div>"
-                        
-                        html_content = f'<div class="nutrient-card"><p style="color:#888; font-size:12px; margin-bottom:0; text-transform:uppercase;">{tur_baslik}</p><h3 style="margin-top:5px; margin-bottom:5px; font-size:20px;">{best_food["name"]}</h3><div class="gram-badge">⚖️ Tüketim Önerisi: {int(rec_grams)} gr</div><br><span style="background-color:#ffebeb; color:#FF4B4B; padding:4px 10px; border-radius:10px; font-size:13px; font-weight:bold;">🔥 {int(final_cal)} kcal</span><div style="background-color:#f8f9fa; padding:10px; border-radius:8px; margin-top:15px; border: 1px solid #eee;"><p style="font-size:12px; color:#555; margin-bottom:0;">Bu porsiyonla kazanılan:</p><h2 style="color:#00b894; margin:5px 0;">{clean_name}</h2><p style="font-size:14px; color:#333; margin-top:5px;"><b>+{final_nut:.1f}</b> eklenecek</p>{bonus_html}</div></div>'
-                        st.markdown(html_content, unsafe_allow_html=True)
-                    else:
-                        st.warning(f"{clean_name} için uygun yemek bulunamadı.")
+                    if best_drink is not None:
+                        used_foods.append(best_drink['name'])
+                        st.markdown(create_card_html(best_drink, drink_nut_key, drink_nut_name), unsafe_allow_html=True)
+                
+                # Araya ayırıcı çizgi at (Eğer 1. seçenekteysek)
+                if option == 1:
+                    st.markdown("<br><hr style='border: 2px dashed #ddd; margin: 30px 0;'><br>", unsafe_allow_html=True)
+                    
         else:
             st.balloons()
             st.success("Tebrikler! Besin değerlerin harika. Gelecek öğünde serbestsin!")
