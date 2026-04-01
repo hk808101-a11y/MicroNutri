@@ -239,6 +239,39 @@ elif st.session_state.step == 3:
     basket = meal_data["basket"]
     totals = {k: sum(x.get(k, 0) for x in basket) for k in targets.keys()}
 
+    # --- OYUNLAŞTIRMA: SAĞLIK SKORU HESAPLAMA ---
+    score_sum = 0
+    num_metrics = len(targets)
+    for k, v in targets.items():
+        if v > 0:
+            ratio = totals[k] / v
+            # Kalori, karbonhidrat ve yağ çok fazla aşılırsa puan kırma mantığı
+            if k in ['calories', 'fat', 'carbs']:
+                if ratio <= 1.15:
+                    score_sum += min(ratio, 1.0)
+                else:
+                    score_sum += max(1.0 - (ratio - 1.15), 0)
+            else:
+                score_sum += min(ratio, 1.0)
+                
+    final_score = int((score_sum / num_metrics) * 100)
+    
+    # Skora göre renk ve mesaj belirleme
+    if final_score >= 80:
+        s_color, s_msg, s_icon = "#00b894", "Harika gidiyorsun! Hedeflerine çok yakınsın, bu düzeni koru.", "🌟"
+    elif final_score >= 50:
+        s_color, s_msg, s_icon = "#fdcb6e", "İdare eder. Bazı eksiklerini sonraki öğünde kapatmalısın.", "⚖️"
+    else:
+        s_color, s_msg, s_icon = "#ff7675", "Kritik seviye! Seçtiğin menü hedeflerinin çok uzağında kaldı.", "⚠️"
+
+    st.markdown(f"""
+    <div style="background-color: {s_color}15; border: 3px solid {s_color}; border-radius: 15px; padding: 25px; text-align: center; margin-bottom: 30px;">
+        <h3 style="margin:0; color: #555; text-transform: uppercase; font-size:16px;">{s_icon} Bu Öğün İçin Sağlık Skorun {s_icon}</h3>
+        <h1 style="margin:10px 0; font-size: 60px; color: {s_color};">{final_score} <span style="font-size:30px; color:#aaa;">/ 100</span></h1>
+        <p style="margin:0; color: #333; font-weight: bold; font-size:16px;">{s_msg}</p>
+    </div>
+    """, unsafe_allow_html=True)
+
     tab1, tab2, tab3 = st.tabs(["📊 Özet Durum", "📋 Detaylı Karne", "💡 Akıllı Diyetisyen Önerisi"])
 
     with tab1:
@@ -296,7 +329,6 @@ elif st.session_state.step == 3:
             search_meal = "Kahvaltı" if meal_data['next_meal_name'] == "Yarınki Kahvaltı" else meal_data['next_meal_name']
             target_cal_per_item = targets['calories'] / 3
             
-            # --- BONUS VİTAMİN BULUCU LİSTE ---
             all_micros = ["vit_a_iu", "vit_b_mg", "vit_c_mg", "vit_d_iu", "vit_e_mg", "calcium_mg", "iron_mg", "magnesium_mg", "zinc_mg"]
             
             for idx, (nutrient_key, deficiency_ratio) in enumerate(sorted_deficiencies):
@@ -331,24 +363,20 @@ elif st.session_state.step == 3:
                         final_nut = (best_food[nutrient_key] / 100) * rec_grams
                         tur_baslik = best_food['Tur'] if 'Tur' in best_food.index and pd.notna(best_food['Tur']) else best_food['category']
                         
-                        # --- EKSTRA KAZANÇ (BONUS) HESAPLAMA ---
                         bonus_list = []
                         for m in all_micros:
                             if m != nutrient_key and best_food[m] > 0:
                                 m_val = (best_food[m] / 100) * rec_grams
-                                if m_val >= 0.5: # Sadece 0.5'ten büyük kayda değer değerleri al
+                                if m_val >= 0.5: 
                                     clean_m = m.replace('_mg', '').replace('_iu', '').upper()
                                     bonus_list.append(f"{clean_m} (+{m_val:.1f})")
                         
                         bonus_html = ""
                         if bonus_list:
-                            # Çok kalabalık olmasın diye sadece en yüksek 3 ekstra vitamini gösterelim
                             bonus_str = ", ".join(bonus_list[:3])
                             bonus_html = f"<div style='margin-top:10px; font-size:11px; color:#666; border-top:1px dashed #ccc; padding-top:8px;'><b>🎁 Ekstra Kazanç:</b> {bonus_str}</div>"
                         
-                        # HTML İÇERİĞİ
                         html_content = f'<div class="nutrient-card"><p style="color:#888; font-size:12px; margin-bottom:0; text-transform:uppercase;">{tur_baslik}</p><h3 style="margin-top:5px; margin-bottom:5px; font-size:20px;">{best_food["name"]}</h3><div class="gram-badge">⚖️ Tüketim Önerisi: {int(rec_grams)} gr</div><br><span style="background-color:#ffebeb; color:#FF4B4B; padding:4px 10px; border-radius:10px; font-size:13px; font-weight:bold;">🔥 {int(final_cal)} kcal</span><div style="background-color:#f8f9fa; padding:10px; border-radius:8px; margin-top:15px; border: 1px solid #eee;"><p style="font-size:12px; color:#555; margin-bottom:0;">Bu porsiyonla kazanılan:</p><h2 style="color:#00b894; margin:5px 0;">{clean_name}</h2><p style="font-size:14px; color:#333; margin-top:5px;"><b>+{final_nut:.1f}</b> eklenecek</p>{bonus_html}</div></div>'
-                        
                         st.markdown(html_content, unsafe_allow_html=True)
                     else:
                         st.warning(f"{clean_name} için uygun yemek bulunamadı.")
