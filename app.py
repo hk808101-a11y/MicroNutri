@@ -311,12 +311,10 @@ elif st.session_state.step == 3:
             if totals[k] < (v * 0.6): 
                 deficiencies[k] = (v - totals[k]) / v
                 
-        # Eğer kullanıcının neredeyse hiç eksiği yoksa bile menüyü boş bırakmamak için varsayılan eksikler ekliyoruz.
         if not deficiencies:
             deficiencies = {"protein": 0.1, "vit_c_mg": 0.1, "calcium_mg": 0.1}
         
         sorted_deficiencies = sorted(deficiencies.items(), key=lambda x: x[1], reverse=True)
-        # Eksiklerin sadece isimlerini bir listeye alalım
         def_keys = [k for k, v in sorted_deficiencies]
             
         st.info("💡 Hedeflerine tam ulaşabilmen için sana 2 farklı Tam Menü (Zorunlu 3 Katı Gıda + 1 İçecek) alternatifi hazırladım. Dilediğini seç!")
@@ -332,10 +330,15 @@ elif st.session_state.step == 3:
         else:
             next_foods = df[df['category'].isin(meal_data['next_cats'])]
             
-        solids_df = next_foods[next_foods['category'] != 'İçecek']
-        drinks_df = next_foods[next_foods['category'] == 'İçecek']
+        # HATA BURADAYDI: Önceden sadece "category" sütununa bakıyorduk. Kefir'in kategorisi "Süt Ürünü" olduğu için onu katı gıda sayıyordu!
+        # DÜZELTME: Artık direkt "Tur" sütununa bakıp, "İçecek" yazanları kesin bir şekilde ayırıyoruz.
+        if 'Tur' in next_foods.columns:
+            solids_df = next_foods[next_foods['Tur'] != 'İçecek']
+            drinks_df = next_foods[next_foods['Tur'] == 'İçecek']
+        else:
+            solids_df = next_foods[next_foods['category'] != 'İçecek']
+            drinks_df = next_foods[next_foods['category'] == 'İçecek']
 
-        # HTML Kart Oluşturucu Fonksiyon
         def create_card_html(best_food, nutrient_key, clean_name):
             food_cal_100g = best_food['calories']
             if food_cal_100g > 0: rec_grams = (target_cal_per_item / food_cal_100g) * 100
@@ -369,15 +372,16 @@ elif st.session_state.step == 3:
             html_code = f'''<div class="nutrient-card"><p style="color:#888; font-size:11px; margin-bottom:0; text-transform:uppercase;">{tur_baslik}</p><h3 style="margin-top:5px; margin-bottom:5px; font-size:16px;">{best_food["name"]}</h3><div class="gram-badge">⚖️ Porsiyon: {int(rec_grams)} gr/ml</div><br><span style="background-color:#ffebeb; color:#FF4B4B; padding:4px 8px; border-radius:10px; font-size:12px; font-weight:bold;">🔥 {int(final_cal)} kcal</span><div style="background-color:#f8f9fa; padding:10px; border-radius:8px; margin-top:15px; border: 1px solid #eee;"><p style="font-size:11px; color:#555; margin-bottom:0;">Kazanılan:</p><h2 style="color:#00b894; margin:5px 0; font-size:18px;">{clean_name}</h2><p style="font-size:13px; color:#333; margin-top:5px;"><b>{nut_text}</b></p>{bonus_html}</div></div>'''
             return html_code
 
-        # İKİ FARKLI SEÇENEK (DÖNGÜSÜ)
+        # İKİ FARKLI SEÇENEK
         for option in [1, 2]:
             st.markdown(f"<h3 style='color:#FF4B4B; margin-top:20px; text-align:center;'>🍱 Menü Seçeneği {option}</h3>", unsafe_allow_html=True)
             cols = st.columns(4)
             
-            # --- ZORUNLU 3 KATI GIDA (YİYECEK) ---
+            # --- 3 KATI GIDA KONTROLÜ ---
             solid_count = 0
-            while solid_count < 3:
-                # Eksik listesinde yeterince eleman yoksa, başa sarıp tekrar eksiklere göre veya kaloriye göre arar
+            attempts = 0 # Güvenlik kilidi: Sistem aynı yemeği bulamazsa donmasın diye.
+            while solid_count < 3 and attempts < 15:
+                attempts += 1
                 target_nut = def_keys[solid_count % len(def_keys)]
                 clean_name = target_nut.replace("_mg", "").replace("_iu", "").upper()
                 
@@ -389,9 +393,9 @@ elif st.session_state.step == 3:
                     
                     with cols[solid_count]:
                         st.markdown(create_card_html(best_solid, target_nut, clean_name), unsafe_allow_html=True)
-                solid_count += 1
+                    solid_count += 1
 
-            # --- ZORUNLU 1 İÇECEK ---
+            # --- ZORUNLU 1 İÇECEK KONTROLÜ ---
             with cols[3]:
                 best_drink = None
                 drink_nut_name = "HİDRASYON"
@@ -399,7 +403,6 @@ elif st.session_state.step == 3:
                 
                 avail_drinks = drinks_df[~drinks_df['name'].isin(used_foods)].copy()
                 if not avail_drinks.empty:
-                    # İçeceği en büyük eksiğe (listede ilk sırada olana) göre seçmeye çalışalım
                     first_def = def_keys[0]
                     avail_drinks['fp'] = avail_drinks[first_def] / avail_drinks['calories'].replace(0, 1)
                     helpful_drinks = avail_drinks[avail_drinks[first_def] > 0]
@@ -409,14 +412,12 @@ elif st.session_state.step == 3:
                         drink_nut_name = first_def.replace("_mg", "").replace("_iu", "").upper()
                         drink_nut_key = first_def
                     else:
-                        # Eğer eksik olan vitamin (mesela A vitamini) içeceklerde yoksa, rastgele bir içecek ver.
                         best_drink = avail_drinks.sample(n=1).iloc[0]
                         drink_nut_name = "FERAHLIK"
                         
                     used_foods.append(best_drink['name'])
                     st.markdown(create_card_html(best_drink, drink_nut_key, drink_nut_name), unsafe_allow_html=True)
             
-            # Araya ayırıcı çizgi at (Eğer 1. seçenekteysek)
             if option == 1:
                 st.markdown("<br><hr style='border: 2px dashed #ddd; margin: 30px 0;'><br>", unsafe_allow_html=True)
                     
